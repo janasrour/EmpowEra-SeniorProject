@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Donate | Empowera</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+     <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #60a5fa;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --white: #fff;
+            --radius: 8px;
+            --shadow: 0 2px 8px rgba(37,99,235,0.08);
+        }
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 340px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: var(--secondary);
+        }
+        .slider {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s;
+            object-fit: cover;
+        }
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-message {
+            position: relative;
+            z-index: 3;
+            color: var(--white);
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(30,64,175,0.25);
+            padding: 0 1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        /* Causes Section */
+        .causes-section {
+            max-width: 1200px;
+            margin: 2.5rem auto 0 auto;
+            padding: 0 1.5rem;
+        }
+        .causes-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            text-align: center;
+        }
+        .causes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+        .cause-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s;
+        }
+        .cause-card:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        .cause-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .cause-content {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .cause-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        .cause-desc {
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            color: #334155;
+            flex: 1;
+        }
+        .cause-card button {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .cause-card button:hover {
+            background: var(--secondary);
+        }
+        /* Donation Section */
+        .donation-section {
+            background: var(--white);
+            margin: 3rem auto 0 auto;
+            max-width: 600px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem 1.5rem;
+        }
+        .donation-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            text-align: center;
+        }
+        .donation-form label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 500;
+        }
+        .amount-options {
+            display: flex;
+            gap: 0.7rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .amount-btn {
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1.1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            transition: background 0.2s;
+        }
+        .amount-btn.selected, .amount-btn:hover {
+            background: var(--primary);
+        }
+        .custom-amount {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            margin-left: 0.5rem;
+        }
+        .donation-form select, .donation-form input[type="text"], .donation-form input[type="number"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #f1f5f9;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s;
+        }
+        .payment-method.selected {
+            border: 2px solid var(--primary);
+            background: #e0e7ff;
+        }
+        .donation-form button[type="submit"] {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+        .donation-form button[type="submit"]:hover {
+            background: var(--secondary);
+        }
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: var(--white);
+            margin-top: 3rem;
+            padding: 2rem 0 1rem 0;
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .footer-links, .footer-social {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .footer-links a, .footer-social a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1rem;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+        .footer-links a:hover, .footer-social a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            opacity: 0.85;
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .causes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 0.7rem;
+                align-items: flex-start;
+            }
+            .causes-grid {
+                grid-template-columns: 1fr;
+            }
+            .donation-section {
+                padding: 1.2rem 0.5rem;
+            }
+            .footer-container {
+                padding: 0 0.5rem;
+            }
+            .hero-message {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:relative; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link active custom-nav-link donate-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link when navbar is sticky/fixed */
+        .navbar.sticky-top .donate-link.active {
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link in .navbar-light as well */
+        .navbar-light.sticky-top .navbar-nav .events-link.active {
+            text-decoration: none !important;
+        }
+        .navbar-light .navbar-brand {
+            color: #0d6efd !important;
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-label="Inspiring Empowerment">
+        <div class="slider" aria-hidden="true">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" alt="Empowered women smiling" class="slide active">
+            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80" alt="Women learning together" class="slide">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=1200&q=80" alt="Community event with women" class="slide">
+        </div>
+        <div class="hero-message" id="hero-message">
+            Be the Change They Need
+        </div>
+    </section>
+
+    <!-- Causes Section -->
+    <section class="causes-section" aria-label="Donation Causes">
+        <h2 class="causes-title">Support a Cause</h2>
+        <div class="causes-grid">
+            <div class="cause-card" data-cause="Teaching New Knowledge">
+                <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" alt="Women learning digital skills" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Teaching New Knowledge</div>
+                        <div class="cause-desc">Help women gain digital literacy, entrepreneurship, and life-changing skills for a brighter future.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+            <div class="cause-card" data-cause="Supplying Raw Materials">
+                <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80" alt="Raw materials for crafts" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Supplying Raw Materials</div>
+                        <div class="cause-desc">Provide essential materials like yarn, fabrics, and art supplies to empower creative livelihoods.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+            <div class="cause-card" data-cause="Funding Local Events">
+                <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80" alt="Community event" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Funding Local Events</div>
+                        <div class="cause-desc">Support community fairs, exhibitions, and events that showcase and uplift women's achievements.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+            <div class="cause-card" data-cause="Childcare Support">
+                <img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=600&q=80" alt="Childcare support" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Childcare Support</div>
+                        <div class="cause-desc">Enable mothers to participate in programs by providing safe and nurturing childcare support.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+            <div class="cause-card" data-cause="Mentorship Programs">
+                <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=600&q=80" alt="Mentorship session" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Mentorship Programs</div>
+                        <div class="cause-desc">Connect women with mentors for guidance, support, and inspiration on their journeys.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+            <div class="cause-card" data-cause="Mental Health Resources">
+                <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=600&q=80" alt="Mental health support" class="cause-img">
+                <div class="cause-content">
+                    <div>
+                        <div class="cause-title">Mental Health Resources</div>
+                        <div class="cause-desc">Fund access to counseling, workshops, and safe spaces for emotional well-being.</div>
+                    </div>
+                    <button type="button" class="donate-now-btn">Donate Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Section -->
+    <section class="donation-section" aria-label="Donation Form">
+        <h2 class="donation-title">Make a Donation</h2>
+        <form class="donation-form" id="donation-form" autocomplete="off">
+            <label for="donation-amount">Donation Amount</label>
+            <div class="amount-options" role="group" aria-label="Preset donation amounts">
+                <button type="button" class="amount-btn" data-amount="10">$10</button>
+                <button type="button" class="amount-btn" data-amount="25">$25</button>
+                <button type="button" class="amount-btn" data-amount="50">$50</button>
+                <button type="button" class="amount-btn" data-amount="100">$100</button>
+                <input type="number" min="1" step="1" placeholder="Custom" class="custom-amount" id="custom-amount" aria-label="Custom donation amount">
+            </div>
+            <label for="donation-cause">Select Cause</label>
+            <select id="donation-cause" required aria-required="true">
+                <option value="">-- Please select --</option>
+                <option value="Teaching New Knowledge">Teaching New Knowledge</option>
+                <option value="Supplying Raw Materials">Supplying Raw Materials</option>
+                <option value="Funding Local Events">Funding Local Events</option>
+                <option value="Childcare Support">Childcare Support</option>
+                <option value="Mentorship Programs">Mentorship Programs</option>
+                <option value="Mental Health Resources">Mental Health Resources</option>
+            </select>
+            <label>Payment Method</label>
+            <div class="payment-methods" role="group" aria-label="Payment methods">
+                <div class="payment-method selected" data-method="card" tabindex="0">
+                    <input type="radio" name="payment" id="pay-card" value="card" checked aria-checked="true">
+                    <label for="pay-card">Whish Money</label>
+                </div>
+                
+            </div>
+            <button type="submit">Donate Now</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Terms</a>
+                <a href="#">Privacy Policy</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook"><span aria-hidden="true">🌐</span> Facebook</a>
+                <a href="#" aria-label="Twitter"><span aria-hidden="true">🐦</span> Twitter</a>
+                <a href="#" aria-label="Instagram"><span aria-hidden="true">📸</span> Instagram</a>
+            </div>
+        </div>
+        <div class="footer-note">
+            Empowera is committed to transparency. 100% of your donation goes to empowering vulnerable communities.
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Hero slider
+        const slides = document.querySelectorAll('.slide');
+        const heroMessages = [
+            "Be the Change They Need",
+            "Your Donation Builds Futures",
+            "Empower Vulnerable Women Through Action"
+        ];
+        let currentSlide = 0;
+        let currentMsg = 0;
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+            currentMsg = (currentMsg + 1) % heroMessages.length;
+            document.getElementById('hero-message').textContent = heroMessages[currentMsg];
+        }, 4000);
+
+        // Causes "Donate Now" buttons auto-select cause in form
+        document.querySelectorAll('.donate-now-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const cause = this.closest('.cause-card').dataset.cause;
+                document.getElementById('donation-cause').value = cause;
+                window.scrollTo({ top: document.querySelector('.donation-section').offsetTop - 60, behavior: 'smooth' });
+            });
+        });
+
+        // Donation amount selection
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const customAmount = document.getElementById('custom-amount');
+        let selectedAmount = null;
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                amountBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                customAmount.value = '';
+                selectedAmount = this.dataset.amount;
+            });
+        });
+        customAmount.addEventListener('input', function() {
+            amountBtns.forEach(b => b.classList.remove('selected'));
+            selectedAmount = this.value;
+        });
+
+        // Payment method selection
+        document.querySelectorAll('.payment-method').forEach(pm => {
+            pm.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(p => p.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+            pm.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Donation form submission (mock)
+        document.getElementById('donation-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let amount = selectedAmount || customAmount.value;
+            let cause = document.getElementById('donation-cause').value;
+            let payment = document.querySelector('.payment-method.selected input').value;
+            if (!amount || amount <= 0) {
+                alert('Please select or enter a valid donation amount.');
+                return;
+            }
+            if (!cause) {
+                alert('Please select a cause.');
+                return;
+            }
+            alert(`Thank you for your generous donation of $${amount} to "${cause}" via ${payment.charAt(0).toUpperCase() + payment.slice(1)}!`);
+            this.reset();
+            amountBtns.forEach(b => b.classList.remove('selected'));
+            selectedAmount = null;
+            document.querySelector('.payment-method').classList.add('selected');
+        });
+    </script>
+</body>
+</html>

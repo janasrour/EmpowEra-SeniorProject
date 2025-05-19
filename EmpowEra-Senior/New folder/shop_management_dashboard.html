@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Management - EmpowerA Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            color: #1e293b;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        .stat-icon.sales { background: #dbeafe; color: #2563eb; }
+        .stat-icon.revenue { background: #dcfce7; color: #16a34a; }
+        .stat-icon.sellers { background: #fef3c7; color: #d97706; }
+        .stat-icon.products { background: #ede9fe; color: #7c3aed; }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-change.positive { color: #16a34a; }
+        .stat-change.negative { color: #dc2626; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .panel-content {
+            padding: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .seller-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .seller-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .seller-item:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .seller-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+
+        .seller-info {
+            flex: 1;
+        }
+
+        .seller-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .seller-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .seller-revenue {
+            font-weight: 600;
+            color: #16a34a;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .product-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .product-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #94a3b8;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .product-sales {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        .rating-text {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .feedback-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .feedback-item {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .feedback-author {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .feedback-date {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .feedback-rating {
+            margin-bottom: 8px;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .filter-tab.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ef4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Shop Management Dashboard</h1>
+            <p>Monitor and analyze seller performance, product sales, and customer feedback</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon sales">📊</div>
+                <div class="stat-value">12,847</div>
+                <div class="stat-label">Total Sales This Month</div>
+                <div class="stat-change positive">+15.2% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon revenue">💰</div>
+                <div class="stat-value">$284,390</div>
+                <div class="stat-label">Total Revenue</div>
+                <div class="stat-change positive">+22.1% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sellers">👥</div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Active Sellers</div>
+                <div class="stat-change positive">+8 new this month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon products">📦</div>
+                <div class="stat-value">3,247</div>
+                <div class="stat-label">Total Products</div>
+                <div class="stat-change positive">+142 added this month</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Analytics Overview</h2>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('sales-tab')">Sales Analytics</div>
+                    <div class="tab" onclick="switchTab('sellers-tab')">Top Sellers</div>
+                    <div class="tab" onclick="switchTab('products-tab')">Product Performance</div>
+                </div>
+                <div class="panel-content">
+                    <div id="sales-tab" class="tab-content active">
+                        <div class="chart-container">
+                            <div style="text-align: center;">
+                                <h3>Sales Chart</h3>
+                                <p>Interactive sales chart would be displayed here</p>
+                                <canvas id="salesChart" style="display: none;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sellers-tab" class="tab-content">
+                        <input type="text" class="search-box" placeholder="Search sellers..." id="sellerSearch">
+                        <div class="seller-list" id="sellerList">
+                            <div class="seller-item">
+                                <div class="seller-avatar">JD</div>
+                                <div class="seller-info">
+                                    <div class="seller-name">Jane's Fashion Store</div>
+                                    <div class="seller-stats">
+                                        <span>1,245 products</span>
+                                        <span>4.8 ⭐ rating</span>
+                                        <span>892 sales</span>
+                                    </div>
+                                </div>
+                                <div class="seller-revenue">$45,280</div>
+                            </div>
+                            <div class="seller-item">
+                                <div class="seller-avatar">TM</div>
+                                <div class="seller-info">
+                                    <div class="seller-name">Tech Marketplace</div>
+                                    <div class="seller-stats">
+                                        <span>687 products</span>
+                                        <span>4.9 ⭐ rating</span>
+                                        <span>1,456 sales</span>
+                                    </div>
+                                </div>
+                                <div class="seller-revenue">$67,540</div>
+                            </div>
+                            <div class="seller-item">
+                                <div class="seller-avatar">HB</div>
+                                <div class="seller-info">
+                                    <div class="seller-name">Home & Beauty Co.</div>
+                                    <div class="seller-stats">
+                                        <span>934 products</span>
+                                        <span>4.7 ⭐ rating</span>
+                                        <span>1,123 sales</span>
+                                    </div>
+                                </div>
+                                <div class="seller-revenue">$38,920</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="products-tab" class="tab-content">
+                        <div class="filter-tabs">
+                            <div class="filter-tab active" onclick="filterProducts('all')">All Products</div>
+                            <div class="filter-tab" onclick="filterProducts('bestseller')">Best Sellers</div>
+                            <div class="filter-tab" onclick="filterProducts('recommended')">Recommended</div>
+                            <div class="filter-tab" onclick="filterProducts('low-stock')">Low Stock</div>
+                        </div>
+                        <div class="product-grid" id="productGrid">
+                            <div class="product-card" data-category="bestseller recommended">
+                                <div class="recommended-badge">HOT</div>
+                                <div class="product-image">👕</div>
+                                <div class="product-info">
+                                    <div class="product-name">Summer T-Shirt</div>
+                                    <div class="product-sales">2,847 sales this month</div>
+                                    <div class="product-rating">
+                                        <span class="stars">⭐⭐⭐⭐⭐</span>
+                                        <span class="rating-text">4.9 (156 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-card" data-category="bestseller">
+                                <div class="product-image">👟</div>
+                                <div class="product-info">
+                                    <div class="product-name">Running Shoes</div>
+                                    <div class="product-sales">1,934 sales this month</div>
+                                    <div class="product-rating">
+                                        <span class="stars">⭐⭐⭐⭐⭐</span>
+                                        <span class="rating-text">4.8 (89 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-card" data-category="recommended">
+                                <div class="recommended-badge">TOP</div>
+                                <div class="product-image">👗</div>
+                                <div class="product-info">
+                                    <div class="product-name">Elegant Dress</div>
+                                    <div class="product-sales">1,456 sales this month</div>
+                                    <div class="product-rating">
+                                        <span class="stars">⭐⭐⭐⭐⭐</span>
+                                        <span class="rating-text">4.7 (203 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-card" data-category="low-stock">
+                                <div class="product-image">⌚</div>
+                                <div class="product-info">
+                                    <div class="product-name">Smart Watch</div>
+                                    <div class="product-sales">892 sales this month</div>
+                                    <div class="product-rating">
+                                        <span class="stars">⭐⭐⭐⭐</span>
+                                        <span class="rating-text">4.6 (67 reviews)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Customer Feedback</h2>
+                    <button class="btn btn-secondary">View All</button>
+                </div>
+                <div class="panel-content">
+                    <div class="feedback-list">
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-author">Sarah M.</span>
+                                <span class="feedback-date">2 hours ago</span>
+                            </div>
+                            <div class="feedback-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <div class="feedback-text">Absolutely love this dress! Perfect fit and great quality. Fast shipping too!</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-author">Mike R.</span>
+                                <span class="feedback-date">5 hours ago</span>
+                            </div>
+                            <div class="feedback-rating">
+                                <span class="stars">⭐⭐⭐⭐</span>
+                            </div>
+                            <div class="feedback-text">Good product overall, but delivery took longer than expected.</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-author">Emily K.</span>
+                                <span class="feedback-date">1 day ago</span>
+                            </div>
+                            <div class="feedback-rating">
+                                <span class="stars">⭐⭐⭐⭐⭐</span>
+                            </div>
+                            <div class="feedback-text">Excellent customer service and product quality. Highly recommend!</div>
+                        </div>
+                        <div class="feedback-item">
+                            <div class="feedback-header">
+                                <span class="feedback-author">Tom L.</span>
+                                <span class="feedback-date">2 days ago</span>
+                            </div>
+                            <div class="feedback-rating">
+                                <span class="stars">⭐⭐⭐</span>
+                            </div>
+                            <div class="feedback-text">Product is decent but not what I expected from the photos.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title">Financial Overview</h2>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary">Export Report</button>
+                    <button class="btn btn-primary">Generate Invoice</button>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="chart-container">
+                    <div style="text-align: center;">
+                        <h3>Revenue & Profit Chart</h3>
+                        <p>Financial analytics and trends would be displayed here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabId) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Product filtering functionality
+        function filterProducts(category) {
+            // Remove active class from all filter tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category.includes(category)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Search functionality for sellers
+        document.getElementById('sellerSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const sellers = document.querySelectorAll('.seller-item');
+            
+            sellers.forEach(seller => {
+                const name = seller.querySelector('.seller-name').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    seller.style.display = 'flex';
+                } else {
+                    seller.style.display = 'none';
+                }
+            });
+        });
+
+        // Simulate real-time updates
+        function updateStats() {
+            const statsValues = document.querySelectorAll('.stat-value');
+            statsValues.forEach(stat => {
+                const currentValue = parseInt(stat.textContent.replace(/[$,]/g, ''));
+                const randomChange = Math.floor(Math.random() * 10) - 5;
+                const newValue = currentValue + randomChange;
+                
+                if (stat.textContent.includes('$')) {
+                    stat.textContent = '$' + newValue.toLocaleString();
+                } else {
+                    stat.textContent = newValue.toLocaleString();
+                }
+            });
+        }
+
+        // Update stats every 30 seconds (for demo purposes)
+        setInterval(updateStats, 30000);
+
+        // Add click handlers for cards
+        document.querySelectorAll('.seller-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const sellerName = this.querySelector('.seller-name').textContent;
+                alert(`Viewing detailed analytics for ${sellerName}`);
+            });
+        });
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const productName = this.querySelector('.product-name').textContent;
+                alert(`Viewing detailed analytics for ${productName}`);
+            });
+        });
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Shop Management Dashboard loaded successfully');
+            
+            // Add some interactive animations
+            const cards = document.querySelectorAll('.stat-card, .seller-item, .product-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

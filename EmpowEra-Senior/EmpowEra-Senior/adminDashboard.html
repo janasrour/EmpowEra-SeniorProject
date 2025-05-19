@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Empowera Admin Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #60a5fa;
+            --bg: #f8fafc;
+            --sidebar-bg: #1e293b;
+            --sidebar-active: #2563eb;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --white: #fff;
+            --border: #e5e7eb;
+            --radius: 8px;
+            --transition: 0.2s;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        a { color: inherit; text-decoration: none; }
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--white);
+            padding: 0 2rem;
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+        nav a {
+            font-weight: 500;
+            color: var(--text-light);
+            transition: color var(--transition);
+        }
+        nav a.active, nav a:hover {
+            color: var(--primary);
+        }
+        /* Layout */
+        .dashboard-container {
+            display: flex;
+            min-height: calc(100vh - 64px);
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--sidebar-bg);
+            color: var(--white);
+            padding: 2rem 0 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: left var(--transition);
+            position: relative;
+        }
+        .sidebar .sidebar-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0 2rem 1rem 2rem;
+            letter-spacing: 1px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .sidebar-nav button, .sidebar-nav a {
+            background: none;
+            border: none;
+            color: inherit;
+            text-align: left;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            transition: background var(--transition), border-color var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .sidebar-nav .active, .sidebar-nav button:focus {
+            background: var(--sidebar-active);
+            border-left: 4px solid var(--accent);
+            color: var(--white);
+            outline: none;
+        }
+        .sidebar-toggle {
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: -48px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 2rem;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .dashboard-welcome {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .dashboard-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            padding: 1.5rem 2rem;
+            min-width: 180px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            border: 1px solid var(--border);
+        }
+        .stat-card .stat-label {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        /* Courses */
+        .courses-list {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .course-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            border: 1px solid var(--border);
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: box-shadow var(--transition);
+        }
+        .course-card:hover {
+            box-shadow: 0 4px 16px rgba(30,41,59,0.08);
+        }
+        .course-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #e0e7ef;
+        }
+        .course-card-content {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .course-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .manage-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: auto;
+            transition: background var(--transition);
+        }
+        .manage-btn:hover, .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 1rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            border-bottom: 2px solid transparent;
+            transition: color var(--transition), border-color var(--transition);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+        /* Course Management Views */
+        .tab-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        label {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        input[type="text"], input[type="date"], textarea, select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color var(--transition);
+        }
+        input[type="file"] {
+            margin-top: 0.5rem;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition);
+        }
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+        }
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text-light);
+        }
+        /* Chat Box */
+        .chat-box {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--white);
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            height: 350px;
+            overflow: hidden;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .chat-message {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        .chat-message .sender {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+        .chat-message .text {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid var(--border);
+            padding: 0.5rem;
+            gap: 0.5rem;
+            background: var(--bg);
+        }
+        .chat-input input {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+        .chat-input button {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        /* Activity Log */
+        .activity-log {
+            max-height: 250px;
+            overflow-y: auto;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-size: 0.98rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        .activity-entry {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 64px;
+                height: calc(100vh - 64px);
+                z-index: 200;
+                box-shadow: 2px 0 8px rgba(30,41,59,0.08);
+                transition: left var(--transition);
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            main {
+                padding: 1rem;
+            }
+            .courses-list {
+                gap: 1rem;
+            }
+        }
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                height: auto;
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+            .sidebar {
+                width: 100vw;
+                left: -100vw;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .dashboard-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .courses-list {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .course-card {
+                width: 100%;
+            }
+        }
+        /* Accessibility focus */
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo" aria-label="Empowera Home">
+            <img src="https://i.imgur.com/6o5Vg1F.png" alt="Empowera Logo" style="height:36px;margin-right:12px;">
+            Empowera
+        </div>
+        <nav aria-label="Main navigation">
+            <a href="index.html" class="active">Home</a>
+            <a href="courses.html">Courses</a>
+            <a href="#">Logout</a>
+        </nav>
+    </header>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" aria-label="Sidebar navigation">
+            <button class="sidebar-toggle" aria-label="Toggle sidebar" tabindex="0">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="sidebar-header">Admin</div>
+            <nav class="sidebar-nav" role="navigation">
+                <button class="active" data-view="overview" aria-label="Dashboard Overview"><i class="fas fa-chart-pie"></i> Overview</button>
+                <button data-view="courses" aria-label="Courses"><i class="fas fa-book"></i> Courses Management</button>
+                <button data-view="shop" aria-label="Shop"><i class="fas fa-store"></i> Shop Management</button>
+                <button data-view="workshops" aria-label="Workshops"><i class="fas fa-chalkboard-teacher"></i> Workshops Management</button>
+                <button data-view="events" aria-label="Events"><i class="fas fa-calendar-alt"></i> Events Management</button>
+                <button data-view="newsletter" aria-label="Newsletter"><i class="fas fa-envelope"></i> Newsletter Management</button>
+                <button data-view="donations" aria-label="Donations"><i class="fas fa-donate"></i> Donations Management</button>
+                <button data-view="activity" aria-label="Activity Log"><i class="fas fa-list"></i> Activity Log</button>
+                <button data-view="messages" aria-label="Messages"><i class="fas fa-comments"></i> Messages</button>
+                <button data-view="settings" aria-label="Settings"><i class="fas fa-cog"></i> Settings</button>
+            </nav>
+        </aside>
+        <!-- Main Content -->
+        <main id="main-content" tabindex="0">
+            <!-- Overview View -->
+             <style>
+            /* Topbar */
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .topbar-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .topbar-profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        .logout-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            padding: 8px 16px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .logout-btn:hover {
+            background: var(--primary-dark);
+        }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 32px;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border: 1px solid var(--border);
+        }
+        .card-title {
+            font-size: 1rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        .card-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        /* Charts */
+        .charts-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            padding: 24px;
+            border: 1px solid var(--border);
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        /* Recent Activity */
+        .activity-feed {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 4px rgba(30,41,59,0.04);
+            padding: 24px;
+            border: 1px solid var(--border);
+            min-height: 220px;
+        }
+        .activity-feed h3 {
+            margin: 0 0 16px 0;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+        }
+        .activity-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.98rem;
+            color: var(--text);
+        }
+        .activity-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            min-width: 20px;
+            text-align: center;
+        }
+         /* Responsive */
+        @media (max-width: 900px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .main-content {
+                padding: 16px;
+            }
+        }
+        @media (max-width: 700px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        .dashboard-layout {
+                flex-direction: column;
+            }
+            .main-content {
+                padding: 12px;
+            }
+        
+        @media (max-width: 500px) {
+            .topbar {
+                padding: 0 8px;
+            }
+            .main-content {
+                padding: 6px;
+            }
+        }
+        </style>
+            <!-- Main Content -->
+        <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+            <!-- Topbar -->
+            <header class="topbar" role="banner">
+                <button class="sidebar-toggle" aria-label="Open Sidebar" id="mobileSidebarToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="topbar-profile" tabindex="0" aria-label="Admin Profile">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin profile photo" />
+                    <span>Admin</span>
+                </div>
+                <button class="logout-btn" aria-label="Logout"><i class="fa-solid fa-sign-out-alt"></i> Logout</button>
+            </header>
+            <main class="main-content" id="mainContent" tabindex="0">
+                <!-- Dashboard Overview -->
+                <section aria-labelledby="dashboard-overview">
+                    <h2 id="dashboard-overview" style="margin:0 0 16px 0;font-size:1.3rem;color:var(--primary-dark);">Dashboard Overview</h2>
+                    <div class="dashboard-cards">
+                        <div class="card" tabindex="0" aria-label="Total Courses">
+                            <div class="card-icon"><i class="fa-solid fa-book"></i></div>
+                            <div class="card-title">Total Courses</div>
+                            <div class="card-value" id="totalCourses">24</div>
+                        </div>
+                        <div class="card" tabindex="0" aria-label="Total Products Sold">
+                            <div class="card-icon"><i class="fa-solid fa-box"></i></div>
+                            <div class="card-title">Products Sold</div>
+                            <div class="card-value" id="totalProducts">1,320</div>
+                        </div>
+                        <div class="card" tabindex="0" aria-label="Total Donations">
+                            <div class="card-icon"><i class="fa-solid fa-heart"></i></div>
+                            <div class="card-title">Donations</div>
+                            <div class="card-value" id="totalDonations">$12,400</div>
+                        </div>
+                        <div class="card" tabindex="0" aria-label="Upcoming Events">
+                            <div class="card-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                            <div class="card-title">Upcoming Events</div>
+                            <div class="card-value" id="upcomingEvents">5</div>
+                        </div>
+                        <div class="card" tabindex="0" aria-label="Newsletter Subscribers">
+                            <div class="card-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div class="card-title">Newsletter Subs</div>
+                            <div class="card-value" id="newsletterSubs">2,150</div>
+                        </div>
+                        <div class="card" tabindex="0" aria-label="Active Users">
+                            <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+                            <div class="card-title">Active Users</div>
+                            <div class="card-value" id="activeUsers">1,040</div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Charts and Analytics -->
+                <section class="charts-row" aria-label="Charts and Analytics">
+                    <div class="chart-card" aria-label="Monthly Growth Chart">
+                        <h3 style="margin:0 0 8px 0;">Monthly Growth</h3>
+                        <canvas id="growthChart" aria-label="Monthly growth of users, donations, and products sold"></canvas>
+                    </div>
+                    <div class="chart-card" aria-label="User Category Distribution">
+                        <h3 style="margin:0 0 8px 0;">User Categories</h3>
+                        <canvas id="userPieChart" aria-label="User category distribution"></canvas>
+                    </div>
+                </section>
+                <!-- Recent Activity Feed -->
+                <section class="activity-feed" aria-label="Recent Activity">
+                    <h3>Recent Activity</h3>
+                    <ul class="activity-list" id="activityFeed">
+                        <li class="activity-item"><i class="fa-solid fa-sign-in-alt"></i> User <b>Jane Doe</b> logged in</li>
+                        <li class="activity-item"><i class="fa-solid fa-plus"></i> New course <b>AI for Kids</b> created</li>
+                        <li class="activity-item"><i class="fa-solid fa-donate"></i> <b>$200</b> donated by <b>John Smith</b></li>
+                        <li class="activity-item"><i class="fa-solid fa-box"></i> Product <b>Parenting Guide</b> listed</li>
+                        <li class="activity-item"><i class="fa-solid fa-edit"></i> Newsletter <b>June Edition</b> edited</li>
+                    </ul>
+                </section>
+            </main>
+             <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    // Set current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+        // Chart.js - Monthly Growth
+        const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+        new Chart(ctxGrowth, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [
+                    {
+                        label: 'Users',
+                        data: [120, 150, 180, 210, 260, 320, 400],
+                        backgroundColor: 'rgba(37,99,235,0.7)',
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Donations ($)',
+                        data: [800, 950, 1100, 1200, 1400, 1600, 1800],
+                        backgroundColor: 'rgba(16,185,129,0.7)',
+                        borderRadius: 6,
+                    },
+                    {
+                        label: 'Products Sold',
+                        data: [100, 130, 160, 200, 250, 300, 350],
+                        backgroundColor: 'rgba(251,191,36,0.7)',
+                        borderRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Chart.js - User Category Pie
+        const ctxPie = document.getElementById('userPieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: ['Customers', 'Sellers', 'Instructors', 'Learners'],
+                datasets: [{
+                    data: [400, 120, 60, 460],
+                    backgroundColor: [
+                        'rgba(37,99,235,0.8)',
+                        'rgba(16,185,129,0.8)',
+                        'rgba(251,191,36,0.8)',
+                        'rgba(239,68,68,0.8)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+        </script>
+            <!-- Courses View -->
+            <section id="courses-view" style="display:none;">
+                <h2>All Courses</h2>
+                <div class="courses-list" id="courses-list" aria-label="Courses list">
+                    <!-- Course cards injected by JS -->
+                </div>
+            </section>
+            <!-- Course Management Modal/View -->
+            <section id="course-management-view" style="display:none;">
+                <button class="btn-secondary" id="back-to-courses" aria-label="Back to All Courses">&larr; Back</button>
+                <h2 id="manage-course-title">Manage Course</h2>
+                <div class="tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+                    <button class="tab-btn" data-tab="students" role="tab">Enrolled Students</button>
+                    <button class="tab-btn" data-tab="assignments" role="tab">Assignments</button>
+                    <button class="tab-btn" data-tab="submissions" role="tab">Submissions</button>
+                    <button class="tab-btn" data-tab="activity" role="tab">Activity Feed</button>
+                </div>
+                <div class="tab-content" id="tab-overview">
+                    <!-- Course Overview Form -->
+                    <form id="course-overview-form" aria-label="Edit course overview">
+                        <div class="form-group">
+                            <label for="course-title">Course Title</label>
+                            <input type="text" id="course-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="course-image">Course Image</label>
+                            <input type="file" id="course-image" accept="image/*">
+                            <img id="course-image-preview" src="" alt="Course image preview" style="margin-top:0.5rem;max-width:180px;display:none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-description">Description</label>
+                            <textarea id="course-description" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="course-schedule">Schedule</label>
+                            <input type="text" id="course-schedule" placeholder="e.g. Mondays 10am-12pm">
+                        </div>
+                        <div class="form-group">
+                            <label for="course-materials">Materials (URLs, comma separated)</label>
+                            <input type="text" id="course-materials">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="course-published"> Published
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </form>
+                </div>
+                <div class="tab-content" id="tab-students" style="display:none;">
+                    <div class="form-group">
+                        <label for="student-search">Search Students</label>
+                        <input type="text" id="student-search" placeholder="Search by name or email">
+                    </div>
+                    <table aria-label="Enrolled students">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table">
+                            <!-- Students injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content" id="tab-assignments" style="display:none;">
+                    <h3>Add/Edit Assignment</h3>
+                    <form id="assignment-form" aria-label="Add or edit assignment">
+                        <div class="form-group">
+                            <label for="assignment-title">Title</label>
+                            <input type="text" id="assignment-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignment-description">Description</label>
+                            <textarea id="assignment-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignment-due">Due Date</label>
+                            <input type="date" id="assignment-due" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignment-attachments">Attachments</label>
+                            <input type="file" id="assignment-attachments" multiple>
+                        </div>
+                        <button type="submit" class="btn-primary">Save Assignment</button>
+                    </form>
+                    <h3 style="margin-top:2rem;">Assignments List</h3>
+                    <table aria-label="Assignments list">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Due</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignments-table">
+                            <!-- Assignments injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content" id="tab-submissions" style="display:none;">
+                    <h3>Student Submissions</h3>
+                    <table aria-label="Student submissions">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Assignment</th>
+                                <th>Submission</th>
+                                <th>Grade</th>
+                                <th>Comment</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissions-table">
+                            <!-- Submissions injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-content" id="tab-activity" style="display:none;">
+                    <h3>Activity Feed</h3>
+                    <div class="activity-log" id="activity-feed">
+                        <!-- Activity entries injected by JS -->
+                    </div>
+                </div>
+            </section>
+            <!-- Assignments View -->
+            <section id="assignments-view" style="display:none;">
+                <h2>Assignments</h2>
+                <table aria-label="Assignments overview">
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Title</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th>Submissions</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-assignments-table">
+                        <!-- Assignments injected by JS -->
+                    </tbody>
+                </table>
+            </section>
+            <!-- Students View -->
+            <section id="students-view" style="display:none;">
+                <h2>Students</h2>
+                <table aria-label="All students">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Courses</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="all-students-table">
+                        <!-- Students injected by JS -->
+                    </tbody>
+                </table>
+            </section>
+            <!-- Activity Log View -->
+            <section id="activity-view" style="display:none;">
+                <h2>Activity Log</h2>
+                <div class="activity-log" id="main-activity-log">
+                    <!-- Activity entries injected by JS -->
+                </div>
+            </section>
+            <!-- Messages/Chat View -->
+            <section id="messages-view" style="display:none;">
+                <h2>Messages / Chat</h2>
+                <div class="chat-box" aria-label="Course chat">
+                    <div class="chat-messages" id="chat-messages" tabindex="0">
+                        <!-- Messages injected by JS -->
+                    </div>
+                    <form class="chat-input" id="chat-form" autocomplete="off" aria-label="Send message">
+                        <input type="text" id="chat-input" placeholder="Type a message..." aria-label="Message">
+                        <button type="submit" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </section>
+            <!-- Settings View -->
+            <section id="settings-view" style="display:none;">
+                <h2>Settings</h2>
+                <form aria-label="Instructor settings">
+                    <div class="form-group">
+                        <label for="instructor-name-input">Name</label>
+                        <input type="text" id="instructor-name-input" value="Dr. Taylor">
+                    </div>
+                    <div class="form-group">
+                        <label for="instructor-email-input">Email</label>
+                        <input type="text" id="instructor-email-input" value="taylor@empowera.edu">
+                    </div>
+                    <button type="submit" class="btn-primary">Save Settings</button>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script>
+        // Demo Data
+        const instructor = {
+            name: "Dr. Taylor",
+            email: "taylor@empowera.edu"
+        };
+        const courses = [
+            {
+                id: 1,
+                title: "Introduction to Computer Science",
+                image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+                description: "A foundational course in computer science.",
+                schedule: "Mon & Wed 10:00-11:30",
+                materials: "https://cs101.com, https://introcs.org",
+                published: true,
+                students: [
+                    { name: "Alice Smith", email: "alice@empowera.edu", status: "Active", progress: 90 },
+                    { name: "Bob Lee", email: "bob@empowera.edu", status: "Active", progress: 80 }
+                ],
+                assignments: [
+                    { id: 1, title: "Assignment 1", description: "Intro assignment", due: "2024-06-10", status: "Open", submissions: [
+                        { student: "Alice Smith", file: "alice1.pdf", grade: 95, comment: "Great work!" },
+                        { student: "Bob Lee", file: "bob1.pdf", grade: null, comment: "" }
+                    ] }
+                ],
+                activity: [
+                    { time: "2024-06-01 09:00", text: "Alice Smith submitted Assignment 1" },
+                    { time: "2024-06-01 09:05", text: "Bob Lee logged in" }
+                ],
+                chat: [
+                    { sender: "Alice Smith", text: "When is the next quiz?", time: "09:10" },
+                    { sender: "Dr. Taylor", text: "Next week!", time: "09:12" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Web Development Bootcamp",
+                image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80",
+                description: "Learn HTML, CSS, JS and build real projects.",
+                schedule: "Tue & Thu 14:00-16:00",
+                materials: "https://webdev.com",
+                published: false,
+                students: [
+                    { name: "Charlie Kim", email: "charlie@empowera.edu", status: "Active", progress: 60 }
+                ],
+                assignments: [
+                    { id: 2, title: "Landing Page", description: "Build a landing page", due: "2024-06-15", status: "Open", submissions: [
+                        { student: "Charlie Kim", file: "charlie-landing.zip", grade: null, comment: "" }
+                    ] }
+                ],
+                activity: [
+                    { time: "2024-06-02 10:00", text: "Charlie Kim submitted Landing Page" }
+                ],
+                chat: []
+            },
+            {
+                id: 3,
+                title: "Data Structures",
+                image: "https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=400&q=80",
+                description: "Explore data structures in depth.",
+                schedule: "Fri 09:00-12:00",
+                materials: "",
+                published: true,
+                students: [],
+                assignments: [],
+                activity: [],
+                chat: []
+            }
+        ];
+        // State
+        let currentView = "overview";
+        let currentCourse = null;
+        let currentTab = "overview";
+        // Sidebar Navigation
+        document.querySelectorAll('.sidebar-nav button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.sidebar-nav button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                showView(this.dataset.view);
+            });
+        });
+        function showView(view) {
+            currentView = view;
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(sec => sec.style.display = 'none');
+            // Show selected
+            document.getElementById(view + '-view').style.display = '';
+            // Accessibility: focus main content
+            document.getElementById('main-content').focus();
+            // Special: refresh content
+            if(view === "courses") renderCourses();
+            if(view === "assignments") renderAllAssignments();
+            if(view === "students") renderAllStudents();
+            if(view === "activity") renderActivityLog();
+            if(view === "messages") renderChat();
+            if(view === "settings") {
+                document.getElementById('instructor-name-input').value = instructor.name;
+                document.getElementById('instructor-email-input').value = instructor.email;
+            }
+        }
+        // Sidebar toggle (mobile)
+        const sidebar = document.querySelector('.sidebar');
+        document.querySelector('.sidebar-toggle').addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+        // Hide sidebar on main click (mobile)
+        document.getElementById('main-content').addEventListener('click', () => {
+            if(window.innerWidth < 900) sidebar.classList.remove('open');
+        });
+        // Render Courses
+        function renderCourses() {
+            const list = document.getElementById('courses-list');
+            list.innerHTML = '';
+            courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.innerHTML = `
+                    <img src="${course.image}" alt="Course image">
+                    <div class="course-card-content">
+                        <div class="course-title">${course.title}</div>
+                        <button class="manage-btn" aria-label="Manage ${course.title}">Manage Course</button>
+                    </div>
+                `;
+                card.querySelector('.manage-btn').addEventListener('click', () => {
+                    openCourseManagement(course.id);
+                });
+                list.appendChild(card);
+            });
+        }
+        // Open Course Management
+        function openCourseManagement(courseId) {
+            currentCourse = courses.find(c => c.id === courseId);
+            showCourseManagementTab("overview");
+            document.getElementById('manage-course-title').textContent = `Manage: ${currentCourse.title}`;
+            document.getElementById('course-title').value = currentCourse.title;
+            document.getElementById('course-description').value = currentCourse.description;
+            document.getElementById('course-schedule').value = currentCourse.schedule;
+            document.getElementById('course-materials').value = currentCourse.materials;
+            document.getElementById('course-published').checked = currentCourse.published;
+            document.getElementById('course-image-preview').src = currentCourse.image;
+            document.getElementById('course-image-preview').style.display = 'block';
+            // Students
+            renderCourseStudents();
+            // Assignments
+            renderCourseAssignments();
+            // Submissions
+            renderCourseSubmissions();
+            // Activity
+            renderCourseActivity();
+            // Show view
+            document.querySelectorAll('main > section').forEach(sec => sec.style.display = 'none');
+            document.getElementById('course-management-view').style.display = '';
+        }
+        // Back to Courses
+        document.getElementById('back-to-courses').addEventListener('click', () => {
+            showView('courses');
+        });
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                showCourseManagementTab(this.dataset.tab);
+            });
+        });
+        function showCourseManagementTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+            document.querySelectorAll('#course-management-view .tab-content').forEach(tc => tc.style.display = 'none');
+            document.getElementById('tab-' + tab).style.display = '';
+        }
+        // Course Overview Form
+        document.getElementById('course-overview-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!currentCourse) return;
+            currentCourse.title = document.getElementById('course-title').value;
+            currentCourse.description = document.getElementById('course-description').value;
+            currentCourse.schedule = document.getElementById('course-schedule').value;
+            currentCourse.materials = document.getElementById('course-materials').value;
+            currentCourse.published = document.getElementById('course-published').checked;
+            // Image
+            const imgInput = document.getElementById('course-image');
+            if(imgInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    currentCourse.image = ev.target.result;
+                    document.getElementById('course-image-preview').src = currentCourse.image;
+                };
+                reader.readAsDataURL(imgInput.files[0]);
+            }
+            alert('Course updated!');
+            renderCourses();
+        });
+        // Image preview
+        document.getElementById('course-image').addEventListener('change', function() {
+            if(this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    document.getElementById('course-image-preview').src = ev.target.result;
+                    document.getElementById('course-image-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        // Students Table
+        function renderCourseStudents() {
+            const tbody = document.getElementById('students-table');
+            tbody.innerHTML = '';
+            if(!currentCourse.students.length) {
+                tbody.innerHTML = `<tr><td colspan="4">No students enrolled.</td></tr>`;
+                return;
+            }
+            currentCourse.students.forEach(stu => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${stu.name}</td>
+                    <td>${stu.email}</td>
+                    <td>${stu.status}</td>
+                    <td>${stu.progress}%</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        // Student search
+        document.getElementById('student-search').addEventListener('input', function() {
+            const q = this.value.toLowerCase();
+            const tbody = document.getElementById('students-table');
+            tbody.querySelectorAll('tr').forEach(tr => {
+                if(tr.textContent.toLowerCase().includes(q)) {
+                    tr.style.display = '';
+                } else {
+                    tr.style.display = 'none';
+                }
+            });
+        });
+        // Assignments Table
+        function renderCourseAssignments() {
+            const tbody = document.getElementById('assignments-table');
+            tbody.innerHTML = '';
+            if(!currentCourse.assignments.length) {
+                tbody.innerHTML = `<tr><td colspan="4">No assignments yet.</td></tr>`;
+                return;
+            }
+            currentCourse.assignments.forEach(assn => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${assn.title}</td>
+                    <td>${assn.due}</td>
+                    <td>${assn.status}</td>
+                    <td>
+                        <button class="btn-secondary" data-edit="${assn.id}">Edit</button>
+                    </td>
+                `;
+                tr.querySelector('button').addEventListener('click', () => {
+                    document.getElementById('assignment-title').value = assn.title;
+                    document.getElementById('assignment-description').value = assn.description;
+                    document.getElementById('assignment-due').value = assn.due;
+                });
+                tbody.appendChild(tr);
+            });
+        }
+        // Assignment Form
+        document.getElementById('assignment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if(!currentCourse) return;
+            const title = document.getElementById('assignment-title').value;
+            const description = document.getElementById('assignment-description').value;
+            const due = document.getElementById('assignment-due').value;
+            const id = Date.now();
+            currentCourse.assignments.push({ id, title, description, due, status: "Open", submissions: [] });
+            renderCourseAssignments();
+            alert('Assignment added!');
+            this.reset();
+        });
+        // Submissions Table
+        function renderCourseSubmissions() {
+            const tbody = document.getElementById('submissions-table');
+            tbody.innerHTML = '';
+            let found = false;
+            currentCourse.assignments.forEach(assn => {
+                assn.submissions.forEach(sub => {
+                    found = true;
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${sub.student}</td>
+                        <td>${assn.title}</td>
+                        <td><a href="#">${sub.file}</a></td>
+                        <td>
+                            <input type="number" min="0" max="100" value="${sub.grade !== null ? sub.grade : ''}" style="width:60px;">
+                        </td>
+                        <td>
+                            <input type="text" value="${sub.comment || ''}" style="width:120px;">
+                        </td>
+                        <td>
+                            <button class="btn-primary">Save Grade</button>
+                        </td>
+                    `;
+                    tr.querySelector('button').addEventListener('click', () => {
+                        sub.grade = parseInt(tr.querySelector('input[type="number"]').value) || null;
+                        sub.comment = tr.querySelector('input[type="text"]').value;
+                        alert('Grade saved!');
+                    });
+                    tbody.appendChild(tr);
+                });
+            });
+            if(!found) {
+                tbody.innerHTML = `<tr><td colspan="6">No submissions yet.</td></tr>`;
+            }
+        }
+        // Activity Feed
+        function renderCourseActivity() {
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = '';
+            if(!currentCourse.activity.length) {
+                feed.innerHTML = `<div>No activity yet.</div>`;
+                return;
+            }
+            currentCourse.activity.forEach(act => {
+                const div = document.createElement('div');
+                div.className = 'activity-entry';
+                div.innerHTML = `<strong>${act.time}</strong> &mdash; ${act.text}`;
+                feed.appendChild(div);
+            });
+        }
+        // All Assignments View
+        function renderAllAssignments() {
+            const tbody = document.getElementById('all-assignments-table');
+            tbody.innerHTML = '';
+            courses.forEach(course => {
+                course.assignments.forEach(assn => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${course.title}</td>
+                        <td>${assn.title}</td>
+                        <td>${assn.due}</td>
+                        <td>${assn.status}</td>
+                        <td>${assn.submissions.length}</td>
+                        <td>
+                            <button class="btn-secondary" data-manage="${course.id}">Manage</button>
+                        </td>
+                    `;
+                    tr.querySelector('button').addEventListener('click', () => {
+                        openCourseManagement(course.id);
+                        showCourseManagementTab('assignments');
+                    });
+                    tbody.appendChild(tr);
+                });
+            });
+            if(!tbody.children.length) {
+                tbody.innerHTML = `<tr><td colspan="6">No assignments found.</td></tr>`;
+            }
+        }
+        // All Students View
+        function renderAllStudents() {
+            const tbody = document.getElementById('all-students-table');
+            tbody.innerHTML = '';
+            let allStudents = [];
+            courses.forEach(course => {
+                course.students.forEach(stu => {
+                    let found = allStudents.find(s => s.email === stu.email);
+                    if(found) {
+                        found.courses.push(course.title);
+                    } else {
+                        allStudents.push({ ...stu, courses: [course.title] });
+                    }
+                });
+            });
+            allStudents.forEach(stu => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${stu.name}</td>
+                    <td>${stu.email}</td>
+                    <td>${stu.courses.join(', ')}</td>
+                    <td>${stu.status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            if(!tbody.children.length) {
+                tbody.innerHTML = `<tr><td colspan="4">No students found.</td></tr>`;
+            }
+        }
+        // Activity Log View
+        function renderActivityLog() {
+            const log = document.getElementById('main-activity-log');
+            log.innerHTML = '';
+            let all = [];
+            courses.forEach(course => {
+                course.activity.forEach(act => {
+                    all.push({ ...act, course: course.title });
+                });
+            });
+            all.sort((a,b) => b.time.localeCompare(a.time));
+            all.forEach(act => {
+                const div = document.createElement('div');
+                div.className = 'activity-entry';
+                div.innerHTML = `<strong>${act.time}</strong> [${act.course}] &mdash; ${act.text}`;
+                log.appendChild(div);
+            });
+            if(!log.children.length) {
+                log.innerHTML = `<div>No activity yet.</div>`;
+            }
+        }
+        // Chat View
+        function renderChat() {
+            const chat = document.getElementById('chat-messages');
+            chat.innerHTML = '';
+            // For demo, show chat from first course
+            const chatData = courses[0].chat;
+            chatData.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'chat-message';
+                div.innerHTML = `<span class="sender">${msg.sender}</span><span class="text">${msg.text}</span>`;
+                chat.appendChild(div);
+            });
+            chat.scrollTop = chat.scrollHeight;
+        }
+        document.getElementById('chat-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            if(!input.value.trim()) return;
+            // For demo, add to first course chat
+            courses[0].chat.push({ sender: instructor.name, text: input.value, time: new Date().toLocaleTimeString() });
+            renderChat();
+            input.value = '';
+        });
+        // Settings Form
+        document.querySelector('#settings-view form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            instructor.name = document.getElementById('instructor-name-input').value;
+            instructor.email = document.getElementById('instructor-email-input').value;
+            document.getElementById('instructor-name').textContent = instructor.name;
+            alert('Settings saved!');
+        });
+        // Initial Render
+        document.getElementById('instructor-name').textContent = instructor.name;
+        renderCourses();
+        // Keyboard navigation for sidebar (accessibility)
+        document.querySelectorAll('.sidebar-nav button').forEach((btn, idx, arr) => {
+            btn.addEventListener('keydown', function(e) {
+                if(e.key === "ArrowDown") {
+                    arr[(idx+1)%arr.length].focus();
+                } else if(e.key === "ArrowUp") {
+                    arr[(idx-1+arr.length)%arr.length].focus();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

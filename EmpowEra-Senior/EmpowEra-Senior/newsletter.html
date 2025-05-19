@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Empowera | Newsletters & Success Stories</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap">
+    <style>
+        :root {
+            --empowera-blue: #2563eb;
+            --empowera-light-blue: #eaf1fb;
+            --card-radius: 14px;
+            --card-shadow: 0 4px 16px rgba(37,99,235,0.08);
+            --font-main: 'Montserrat', Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            font-family: var(--font-main);
+            background: #fff;
+            color: #222;
+        }
+        header {
+            background: var(--empowera-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+        }
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        nav a:hover, nav a.active {
+            opacity: 0.8;
+            border-bottom: 2px solid #fff;
+        }
+        /* Hero Slider */
+        .hero-slider {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            overflow: hidden;
+            background: var(--empowera-light-blue);
+        }
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(90deg,rgba(37,99,235,0.7) 0%,rgba(37,99,235,0.2) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            z-index: 3;
+            text-align: center;
+            padding: 2rem;
+        }
+        .hero-overlay h1 {
+            font-size: 2.2rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .hero-overlay p {
+            font-size: 1.2rem;
+            margin: 0;
+            font-weight: 400;
+        }
+        /* Featured Highlights */
+        .featured-highlights {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin: 2.5rem auto 1.5rem auto;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+        .highlight-card {
+            background: #fff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            width: 260px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .highlight-card:hover {
+            transform: translateY(-4px) scale(1.03);
+        }
+        .highlight-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+        .highlight-content {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .highlight-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .highlight-desc {
+            font-size: 0.98rem;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+        .read-more-btn {
+            background: var(--empowera-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1.1rem;
+            font-size: 0.98rem;
+            cursor: pointer;
+            align-self: flex-start;
+            transition: background 0.2s;
+        }
+        .read-more-btn:hover {
+            background: #1741a6;
+        }
+        /* Success Stories Grid */
+        .stories-section {
+            background: var(--empowera-light-blue);
+            padding: 2rem 0;
+        }
+        .stories-header {
+            max-width: 1100px;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .stories-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .stories-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .stories-filters select, .stories-filters input[type="search"] {
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            border: 1px solid #bcd0f7;
+            font-size: 1rem;
+            outline: none;
+        }
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .story-card {
+            background: #fff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.18s;
+            position: relative;
+        }
+        .story-card:hover {
+            transform: translateY(-3px) scale(1.02);
+        }
+        .story-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .story-content {
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .story-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .story-meta {
+            font-size: 0.92rem;
+            color: #2563eb;
+            margin-bottom: 0.2rem;
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+        }
+        .story-category {
+            background: #eaf1fb;
+            color: #2563eb;
+            border-radius: 4px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
+        }
+        .story-excerpt {
+            font-size: 0.97rem;
+            color: #444;
+            margin-top: 0.3rem;
+            margin-bottom: 0.5rem;
+        }
+        /* Modal for Full Story */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(37,99,235,0.18);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-bg.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: var(--card-radius);
+            box-shadow: 0 8px 32px rgba(37,99,235,0.18);
+            max-width: 600px;
+            width: 95vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #2563eb;
+            cursor: pointer;
+        }
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .modal-meta {
+            font-size: 0.95rem;
+            color: #2563eb;
+            margin-bottom: 0.7rem;
+        }
+        .modal-body {
+            font-size: 1.05rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .modal-carousel {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+        .modal-carousel img {
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .modal-quote {
+            background: #eaf1fb;
+            border-left: 4px solid #2563eb;
+            padding: 0.7rem 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #2563eb;
+            border-radius: 6px;
+        }
+        .modal-video {
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 100%;
+            aspect-ratio: 16/9;
+        }
+        /* Newsletter Archive */
+        .newsletter-archive {
+            max-width: 1100px;
+            margin: 2.5rem auto 2rem auto;
+        }
+        .newsletter-archive h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .newsletter-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+            gap: 1.2rem;
+        }
+        .newsletter-card {
+            background: #fff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .newsletter-title {
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 0.4rem;
+        }
+        .newsletter-summary {
+            font-size: 0.97rem;
+            color: #444;
+            margin-bottom: 0.7rem;
+        }
+        .newsletter-actions {
+            display: flex;
+            gap: 0.7rem;
+            align-items: center;
+        }
+        .newsletter-btn {
+            background: var(--empowera-blue);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.4rem 1rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .newsletter-btn:hover {
+            background: #1741a6;
+        }
+        /* Footer */
+        footer {
+            background: var(--empowera-blue);
+            color: #fff;
+            padding: 2rem 0 1rem 0;
+            margin-top: 2rem;
+        }
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        .footer-section {
+            flex: 1 1 200px;
+            min-width: 180px;
+        }
+        .footer-logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.7rem;
+        }
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.97rem;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        .footer-social {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 0.5rem;
+        }
+        .footer-social a {
+            color: #fff;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .footer-social a:hover {
+            opacity: 0.7;
+        }
+        .footer-newsletter {
+            margin-top: 0.7rem;
+        }
+        .footer-newsletter input[type="email"] {
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            outline: none;
+            width: 60%;
+            max-width: 220px;
+        }
+        .footer-newsletter button {
+            background: #fff;
+            color: var(--empowera-blue);
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .footer-newsletter button:hover {
+            background: #eaf1fb;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+            color: #eaf1fb;
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .featured-highlights, .stories-grid, .newsletter-list, .footer-content {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            .featured-highlights, .stories-grid, .newsletter-list {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
+            }
+        }
+        @media (max-width: 700px) {
+            header, .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .hero-slider {
+                height: 220px;
+            }
+            .highlight-card, .newsletter-card {
+                width: 100%;
+                min-width: 0;
+            }
+            .modal-content {
+                padding: 1rem 0.5rem 1rem 0.5rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .hero-overlay h1 {
+                font-size: 1.2rem;
+            }
+            .hero-overlay p {
+                font-size: 1rem;
+            }
+            .stories-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.7rem;
+            }
+            .footer-newsletter input[type="email"] {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .footer-newsletter button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo" aria-label="Empowera Home">
+            <img src="logo.png" alt="Empowera Logo" style="height:32px;margin-right:10px;">
+            Empowera
+        </div>
+        <nav aria-label="Main Navigation">
+            <a href="#">Home</a>
+            <a href="#">Courses</a>
+            <a href="#">Shop</a>
+            <a href="#">Workshops</a>
+            <a href="#">Events</a>
+            <a href="#" class="active">Newsletters</a>
+            <a href="#">Login</a>
+            <a href="#">Signup</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section (Image Slider) -->
+    <section class="hero-slider" aria-label="Inspiring Stories Slider">
+        <img src="hero1.jpg" class="slide active" alt="Smiling group at Empowera event">
+        <img src="hero2.jpg" class="slide" alt="Empowera workshop celebration">
+        <img src="hero3.jpg" class="slide" alt="Community impact in action">
+        <div class="hero-overlay">
+            <h1 id="hero-title">Real Stories. Real Change.</h1>
+            <p id="hero-desc">Celebrating Empowerment and Community Impact</p>
+        </div>
+    </section>
+
+    <!-- Featured Highlights -->
+    <section class="featured-highlights" aria-label="Featured Success Stories">
+        <div class="highlight-card">
+            <img src="highlight1.jpg" class="highlight-img" alt="Women celebrating graduation">
+            <div class="highlight-content">
+                <div>
+                    <div class="highlight-title">Empowering Women in Tech</div>
+                    <div class="highlight-desc">How our coding bootcamp changed the lives of 30 women in rural areas.</div>
+                </div>
+                <button class="read-more-btn" data-story="0">Read More</button>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <img src="highlight2.jpg" class="highlight-img" alt="Community health awareness event">
+            <div class="highlight-content">
+                <div>
+                    <div class="highlight-title">Health Awareness Drives</div>
+                    <div class="highlight-desc">Our volunteers reached 500+ families with vital health education.</div>
+                </div>
+                <button class="read-more-btn" data-story="1">Read More</button>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <img src="highlight3.jpg" class="highlight-img" alt="Youth learning robotics">
+            <div class="highlight-content">
+                <div>
+                    <div class="highlight-title">Youth Robotics Champions</div>
+                    <div class="highlight-desc">Meet the teens who built award-winning robots with Empowera's support.</div>
+                </div>
+                <button class="read-more-btn" data-story="2">Read More</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Grid -->
+    <section class="stories-section" aria-label="Success Stories">
+        <div class="stories-header">
+            <h2>Success Stories</h2>
+            <div class="stories-filters">
+                <input type="search" id="story-search" placeholder="Search stories..." aria-label="Search stories">
+                <select id="category-filter" aria-label="Filter by category">
+                    <option value="">All Categories</option>
+                    <option value="Community Impact">Community Impact</option>
+                    <option value="Women Empowerment">Women Empowerment</option>
+                    <option value="Tech Education">Tech Education</option>
+                    <option value="Health Awareness">Health Awareness</option>
+                    <option value="Youth Development">Youth Development</option>
+                </select>
+                <select id="sort-filter" aria-label="Sort stories">
+                    <option value="date-desc">Newest</option>
+                    <option value="date-asc">Oldest</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+            </div>
+        </div>
+        <div class="stories-grid" id="stories-grid">
+            <!-- Story cards will be rendered here by JS -->
+        </div>
+    </section>
+
+    <!-- Full Story Modal -->
+    <div class="modal-bg" id="story-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div id="modal-body-content">
+                <!-- JS will inject full story here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Newsletter Archive -->
+    <section class="newsletter-archive" aria-label="Newsletter Archive">
+        <h2>Newsletter Archive</h2>
+        <div class="newsletter-list" id="newsletter-list">
+            <!-- JS will render newsletter cards here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">Empowera</div>
+                <div>Empowering communities through education, technology, and hope.</div>
+                <div class="footer-social" aria-label="Social Media Links">
+                    <a href="#" aria-label="Facebook"><span aria-hidden="true">&#x1F426;</span></a>
+                    <a href="#" aria-label="Twitter"><span aria-hidden="true">&#x1F426;</span></a>
+                    <a href="#" aria-label="Instagram"><span aria-hidden="true">&#x1F33A;</span></a>
+                    <a href="#" aria-label="LinkedIn"><span aria-hidden="true">&#x1F4BB;</span></a>
+                </div>
+            </div>
+            <div class="footer-section footer-links">
+                <a href="#">Home</a>
+                <a href="#">Courses</a>
+                <a href="#">Shop</a>
+                <a href="#">Events</a>
+                <a href="#">Newsletters</a>
+                <a href="#">Contact</a>
+                <a href="#">Legal</a>
+            </div>
+            <div class="footer-section">
+                <div><strong>Subscribe to our Newsletter</strong></div>
+                <form class="footer-newsletter" id="footer-newsletter-form" autocomplete="off">
+                    <input type="email" id="footer-newsletter-email" placeholder="Your email" aria-label="Email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <div id="newsletter-success" style="color:#eaf1fb;font-size:0.97rem;margin-top:0.5rem;display:none;">Thank you for subscribing!</div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Empowera. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // --- Hero Slider ---
+        const heroSlides = [
+            {
+                img: 'hero1.jpg',
+                title: 'Real Stories. Real Change.',
+                desc: 'Celebrating Empowerment and Community Impact',
+                alt: 'Smiling group at Empowera event'
+            },
+            {
+                img: 'hero2.jpg',
+                title: 'Celebrating Empowerment and Community Impact',
+                desc: 'Discover the Journey of Hope and Success',
+                alt: 'Empowera workshop celebration'
+            },
+            {
+                img: 'hero3.jpg',
+                title: 'Discover the Journey of Hope and Success',
+                desc: 'Real Stories. Real Change.',
+                alt: 'Community impact in action'
+            }
+        ];
+        let currentSlide = 0;
+        setInterval(() => {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === currentSlide);
+            });
+            document.getElementById('hero-title').textContent = heroSlides[currentSlide].title;
+            document.getElementById('hero-desc').textContent = heroSlides[currentSlide].desc;
+            currentSlide = (currentSlide + 1) % heroSlides.length;
+        }, 5000);
+
+        // --- Success Stories Data ---
+        const stories = [
+            {
+                id: 0,
+                title: "Empowering Women in Tech",
+                date: "2024-03-15",
+                category: "Women Empowerment",
+                excerpt: "How our coding bootcamp changed the lives of 30 women in rural areas.",
+                img: "highlight1.jpg",
+                author: "Empowera Team",
+                event: "Women in Tech Bootcamp",
+                content: `<p>In March 2024, Empowera launched a coding bootcamp for women in rural communities. Over 12 weeks, 30 women learned web development, digital literacy, and leadership skills. Many have since started their own tech projects or joined local startups.</p>
+                <p>The program included mentorship, hands-on workshops, and real-world projects. Participants reported increased confidence and new career opportunities.</p>`,
+                images: ["highlight1.jpg", "story1b.jpg"],
+                quote: "This bootcamp gave me the skills and courage to pursue my dreams. – Ayesha, Graduate",
+                video: ""
+            },
+            {
+                id: 1,
+                title: "Health Awareness Drives",
+                date: "2024-02-10",
+                category: "Health Awareness",
+                excerpt: "Our volunteers reached 500+ families with vital health education.",
+                img: "highlight2.jpg",
+                author: "Dr. Meera Singh",
+                event: "Community Health Week",
+                content: `<p>Empowera's health awareness campaign in February 2024 mobilized volunteers to visit over 500 families. They distributed educational materials, conducted workshops, and provided free health checkups.</p>
+                <p>The initiative improved community knowledge about hygiene, nutrition, and preventive care.</p>`,
+                images: ["highlight2.jpg", "story2b.jpg"],
+                quote: "We saw a real change in health habits in our village. – Local Leader",
+                video: ""
+            },
+            {
+                id: 2,
+                title: "Youth Robotics Champions",
+                date: "2023-12-05",
+                category: "Youth Development",
+                excerpt: "Meet the teens who built award-winning robots with Empowera's support.",
+                img: "highlight3.jpg",
+                author: "Empowera Robotics Club",
+                event: "Annual Youth Robotics Challenge",
+                content: `<p>Empowera sponsored a robotics club for local teens, providing kits and mentorship. The team won first place at the regional robotics challenge, impressing judges with their creativity and teamwork.</p>
+                <p>Several members are now pursuing STEM degrees and mentoring younger students.</p>`,
+                images: ["highlight3.jpg", "story3b.jpg"],
+                quote: "Building robots taught us to solve problems and work as a team. – Robotics Club Captain",
+                video: ""
+            },
+            {
+                id: 3,
+                title: "Tech for Good: Community Impact",
+                date: "2023-11-20",
+                category: "Community Impact",
+                excerpt: "Digital literacy workshops helped 200+ adults access online services.",
+                img: "story4.jpg",
+                author: "Empowera Digital Team",
+                event: "Digital Literacy Month",
+                content: `<p>Through a series of workshops, Empowera volunteers taught digital skills to adults in underserved areas. Participants learned to use smartphones, access government services, and stay safe online.</p>
+                <p>Feedback showed increased confidence and independence among attendees.</p>`,
+                images: ["story4.jpg"],
+                quote: "",
+                video: ""
+            },
+            {
+                id: 4,
+                title: "STEM for Girls: Breaking Barriers",
+                date: "2023-10-12",
+                category: "Tech Education",
+                excerpt: "Girls-only STEM camps inspired future engineers and scientists.",
+                img: "story5.jpg",
+                author: "Empowera STEM Team",
+                event: "STEM for Girls Camp",
+                content: `<p>Empowera's STEM for Girls initiative hosted camps where girls explored coding, robotics, and science experiments. The program aimed to close the gender gap in STEM fields.</p>
+                <p>Many participants expressed interest in pursuing STEM careers.</p>`,
+                images: ["story5.jpg", "story5b.jpg"],
+                quote: "I want to be an engineer when I grow up! – Priya, Age 12",
+                video: ""
+            }
+        ];
+
+        // --- Newsletter Archive Data ---
+        const newsletters = [
+            {
+                id: 0,
+                title: "March 2024",
+                summary: "Highlights: Women in Tech Bootcamp, Health Awareness Drives, Upcoming Workshops.",
+                pdf: "newsletter-mar2024.pdf"
+            },
+            {
+                id: 1,
+                title: "December 2023",
+                summary: "Youth Robotics Champions, Community Impact Stories, Volunteer Spotlights.",
+                pdf: "newsletter-dec2023.pdf"
+            },
+            {
+                id: 2,
+                title: "September 2023",
+                summary: "STEM for Girls, Digital Literacy Month, New Partnerships.",
+                pdf: "newsletter-sep2023.pdf"
+            }
+        ];
+
+        // --- Render Stories Grid ---
+        function renderStories(filter = {}) {
+            let filtered = stories.slice();
+            // Filter by category
+            if (filter.category) {
+                filtered = filtered.filter(s => s.category === filter.category);
+            }
+            // Search by keyword
+            if (filter.search) {
+                const q = filter.search.toLowerCase();
+                filtered = filtered.filter(s =>
+                    s.title.toLowerCase().includes(q) ||
+                    s.excerpt.toLowerCase().includes(q) ||
+                    s.content.toLowerCase().includes(q)
+                );
+            }
+            // Sort
+            if (filter.sort === "date-asc") {
+                filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+            } else if (filter.sort === "date-desc") {
+                filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+            // Most popular: just show as-is for demo
+            const grid = document.getElementById('stories-grid');
+            grid.innerHTML = '';
+            filtered.forEach(story => {
+                const card = document.createElement('div');
+                card.className = 'story-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Read full story: ${story.title}`);
+                card.innerHTML = `
+                    <img src="${story.img}" class="story-img" alt="${story.title}">
+                    <div class="story-content">
+                        <div>
+                            <div class="story-title">${story.title}</div>
+                            <div class="story-meta">
+                                <span>${new Date(story.date).toLocaleDateString()}</span>
+                                <span class="story-category">${story.category}</span>
+                            </div>
+                            <div class="story-excerpt">${story.excerpt}</div>
+                        </div>
+                    </div>
+                `;
+                card.addEventListener('click', () => openStoryModal(story.id));
+                card.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') openStoryModal(story.id);
+                });
+                grid.appendChild(card);
+            });
+        }
+
+        // --- Render Newsletter Archive ---
+        function renderNewsletters() {
+            const list = document.getElementById('newsletter-list');
+            list.innerHTML = '';
+            newsletters.forEach(nl => {
+                const card = document.createElement('div');
+                card.className = 'newsletter-card';
+                card.innerHTML = `
+                    <div class="newsletter-title">${nl.title}</div>
+                    <div class="newsletter-summary">${nl.summary}</div>
+                    <div class="newsletter-actions">
+                        <a href="${nl.pdf}" class="newsletter-btn" target="_blank" rel="noopener">View PDF</a>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        // --- Full Story Modal ---
+        function openStoryModal(storyId) {
+            const story = stories.find(s => s.id === storyId);
+            if (!story) return;
+            const modal = document.getElementById('story-modal');
+            const body = document.getElementById('modal-body-content');
+            body.innerHTML = `
+                <div class="modal-title" id="modal-title">${story.title}</div>
+                <div class="modal-meta">
+                    <span>By ${story.author}</span> | <span>${story.event}</span> | <span>${new Date(story.date).toLocaleDateString()}</span>
+                </div>
+                <div class="modal-carousel">
+                    ${story.images.map(img => `<img src="${img}" alt="${story.title} image">`).join('')}
+                </div>
+                <div class="modal-body">${story.content}</div>
+                ${story.quote ? `<div class="modal-quote">${story.quote}</div>` : ''}
+                ${story.video ? `<div class="modal-video"><iframe src="${story.video}" frameborder="0" allowfullscreen title="Story Video"></iframe></div>` : ''}
+            `;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            // Focus trap
+            setTimeout(() => modal.querySelector('.modal-close').focus(), 100);
+        }
+        function closeStoryModal() {
+            document.getElementById('story-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.querySelector('.modal-close').onclick = closeStoryModal;
+        document.getElementById('story-modal').onclick = function(e) {
+            if (e.target === this) closeStoryModal();
+        };
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeStoryModal();
+        });
+
+        // --- Featured Highlights "Read More" buttons ---
+        document.querySelectorAll('.read-more-btn').forEach(btn => {
+            btn.onclick = function() {
+                openStoryModal(Number(this.dataset.story));
+            };
+        });
+
+        // --- Filters and Search ---
+        function setupFilters() {
+            const search = document.getElementById('story-search');
+            const category = document.getElementById('category-filter');
+            const sort = document.getElementById('sort-filter');
+            function update() {
+                renderStories({
+                    search: search.value,
+                    category: category.value,
+                    sort: sort.value
+                });
+            }
+            search.addEventListener('input', update);
+            category.addEventListener('change', update);
+            sort.addEventListener('change', update);
+        }
+
+        // --- Newsletter Signup (Footer) ---
+        document.getElementById('footer-newsletter-form').onsubmit = function(e) {
+            e.preventDefault();
+            document.getElementById('newsletter-success').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('newsletter-success').style.display = 'none';
+                document.getElementById('footer-newsletter-email').value = '';
+            }, 3000);
+        };
+
+        // --- Initial Render ---
+        renderStories();
+        renderNewsletters();
+        setupFilters();
+    </script>
+</body>
+</html>

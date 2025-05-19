@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Empowera Shop</title>
+   <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary: #2563EB;         /* Soft empowering blue */
+            --secondary: #DBEAFE;       /* Light blue background */
+            --accent: #3B82F6;          /* Medium blue accent */
+            --accent-hover: #1E40AF;    /* Darker blue for hover */
+            --text: #1E293B;            /* Dark navy/slate for text */
+            --bg: #EFF6FF;              /* Very light blue */
+            --soft: #F1F5F9;            /* Soft blue/gray for cards */
+            --radius: 14px;
+            --shadow: 0 4px 16px #2563eb22;
+            --shadow-hover: 0 8px 24px #2563eb33;
+            --button-radius: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+       
+        /* Hamburger for mobile */
+        .nav-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #fff;
+        }
+        @media (max-width: 900px) {
+            nav ul {
+                flex-direction: column;
+                background: var(--primary);
+                position: absolute;
+                right: 2rem;
+                top: 70px;
+                min-width: 180px;
+                display: none;
+                box-shadow: var(--shadow);
+                border-radius: var(--radius);
+                z-index: 100;
+            }
+            nav ul.open {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+        }
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 340px;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(90deg, var(--secondary) 60%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-slider {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+        .hero-slide {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-overlay {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(90deg, #eff6ffcc 60%, #3b82f6cc 100%);
+        }
+        .hero-text {
+            font-size: 2.3rem;
+            color: var(--primary);
+            font-family: 'Poppins', 'Georgia', serif;
+            font-weight: 700;
+            text-align: center;
+            padding: 1.2rem 2.2rem;
+            border-radius: var(--radius);
+            background: #fff9;
+            box-shadow: var(--shadow);
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px #1e293b33;
+        }
+        @media (max-width: 600px) {
+            .hero { height: 180px; }
+            .hero-text { font-size: 1.1rem; padding: 0.6rem 1rem; }
+        }
+        /* Search & Filter */
+        .filters {
+            background: var(--secondary);
+            margin: 2rem auto 1rem auto;
+            padding: 1.2rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+        }
+        .filters > * {
+            flex: 1 1 150px;
+            min-width: 120px;
+        }
+        .filters input, .filters select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: var(--button-radius);
+            border: 1px solid #93c5fd;
+            background: #fff;
+            font-size: 1rem;
+            color: var(--text);
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: border 0.2s;
+        }
+        .filters input:focus, .filters select:focus {
+            border: 1.5px solid var(--accent);
+            outline: none;
+        }
+        .filters label {
+            font-size: 0.97rem;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+            display: block;
+            font-weight: 600;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .filters .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        @media (max-width: 900px) {
+            .filters { flex-direction: column; gap: 1rem; padding: 1rem; }
+            .filters > * { min-width: 100px; }
+        }
+        /* Product Grid */
+        .products-section {
+            max-width: 1200px;
+            margin: 0 auto 2rem auto;
+            padding: 0 1rem;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        @media (max-width: 1100px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 800px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: 1fr; }
+        }
+        .product-card {
+            background: var(--soft);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.18s;
+            padding: 0;
+        }
+        .product-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px) scale(1.012);
+        }
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            background: var(--secondary);
+        }
+        .product-info {
+            padding: 1.2rem 1rem 1rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .product-name {
+            font-size: 1.13rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .product-desc {
+            font-size: 0.99rem;
+            color: #334155;
+            flex: 1;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .product-price {
+            font-size: 1.13rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .product-actions button {
+            flex: 1;
+            padding: 0.55rem 0.7rem;
+            border: none;
+            border-radius: var(--button-radius);
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            font-family: 'Poppins', Arial, sans-serif;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #2563eb11;
+        }
+        .product-actions button:hover {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 16px #3b82f633;
+        }
+        .product-actions button:last-child {
+            background: var(--accent);
+            color: #fff;
+        }
+        .product-actions button:last-child:hover {
+            background: var(--accent-hover);
+            color: #fff;
+        }
+        /* Footer */
+        footer {
+            background: var(--primary);
+            padding: 2rem 1rem 1rem 1rem;
+            margin-top: auto;
+            border-top: 1px solid #93c5fd;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 0.7rem;
+        }
+        .footer-social a {
+            color: #fff;
+            font-size: 1.3rem;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: var(--accent);
+        }
+        .footer-message {
+            text-align: center;
+            color: #dbeafe;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+    </style>
+    <!-- Google Fonts for Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+   <!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:relative; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link active custom-nav-link shop-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link when navbar is sticky/fixed */
+        .navbar.sticky-top .shop-link.active {
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link in .navbar-light as well */
+        .navbar-light.sticky-top .navbar-nav .home-link.active {
+            text-decoration: none !important;
+        }
+        .navbar-light .navbar-brand {
+            color: #0d6efd !important;
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-slider" id="heroSlider">
+            <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=900&q=80" class="hero-slide active" alt="Empowerment 1">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=80" class="hero-slide" alt="Empowerment 2">
+            <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=900&q=80" class="hero-slide" alt="Empowerment 3">
+        </div>
+        <div class="hero-overlay">
+            <div class="hero-text" id="heroText">
+                Support Women, Empower Communities
+            </div>
+        </div>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <section class="filters">
+        <div class="filter-group">
+            <label for="searchInput">Search</label>
+            <input type="text" id="searchInput" placeholder="Search products...">
+        </div>
+        <div class="filter-group">
+            <label for="categoryFilter">Category</label>
+            <select id="categoryFilter">
+                <option value="">All</option>
+                <option value="Jewelry">Jewelry</option>
+                <option value="Home Decor">Home Decor</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Gifts">Gifts</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Price Range</label>
+            <div style="display:flex;gap:0.5rem;">
+                <input type="number" id="minPrice" placeholder="Min" min="0" style="width:60px;">
+                <input type="number" id="maxPrice" placeholder="Max" min="0" style="width:60px;">
+            </div>
+        </div>
+        <div class="filter-group">
+            <label for="sortBy">Sort By</label>
+            <select id="sortBy">
+                <option value="newest">Newest</option>
+                <option value="low-high">Price: Low to High</option>
+                <option value="high-low">Price: High to Low</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- Product List Section -->
+    <section class="products-section">
+        <div class="products-grid" id="productsGrid">
+            <!-- Product cards will be injected here -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
+        </div>
+        <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook-f" aria-label="Facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram" aria-label="Instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter" aria-label="Twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in" aria-label="LinkedIn"></i></a>
+        </div>
+        <div class="footer-message">
+            Every purchase supports vulnerable women artisans around the world.
+        </div>
+    </footer>
+
+    <script>
+        // Responsive nav
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+        });
+        window.addEventListener('resize', () => {
+            if(window.innerWidth > 900) navMenu.classList.remove('open');
+        });
+
+        // Hero slider
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroTexts = [
+            "Support Women, Empower Communities",
+            "Your Purchase Changes Lives",
+            "Handcrafted with Love & Purpose"
+        ];
+        let heroIndex = 0;
+        setInterval(() => {
+            heroSlides[heroIndex].classList.remove('active');
+            heroIndex = (heroIndex + 1) % heroSlides.length;
+            heroSlides[heroIndex].classList.add('active');
+            document.getElementById('heroText').textContent = heroTexts[heroIndex];
+        }, 3500);
+
+        // Dummy product data
+        const products = [
+            {
+                id: 1,
+                name: "Handwoven Beaded Necklace",
+                desc: "A beautiful, handwoven necklace made by women artisans in Kenya.",
+                price: 32,
+                category: "Jewelry",
+                image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80",
+                date: "2024-06-01"
+            },
+            {
+                id: 2,
+                name: "Macrame Wall Hanging",
+                desc: "Add a boho touch to your home with this handcrafted wall decor.",
+                price: 45,
+                category: "Home Decor",
+                image: "https://images.unsplash.com/photo-1503389152951-9c3d8b6e9c94?auto=format&fit=crop&w=400&q=80",
+                date: "2024-05-28"
+            },
+            {
+                id: 3,
+                name: "Embroidered Tote Bag",
+                desc: "Eco-friendly tote bag with unique embroidery, perfect for daily use.",
+                price: 28,
+                category: "Accessories",
+                image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80",
+                date: "2024-06-03"
+            },
+            {
+                id: 4,
+                name: "Handmade Ceramic Mug",
+                desc: "Sip your coffee in style with this artisan-crafted ceramic mug.",
+                price: 22,
+                category: "Home Decor",
+                image: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+                date: "2024-05-25"
+            },
+            {
+                id: 5,
+                name: "Block Printed Scarf",
+                desc: "Soft cotton scarf with traditional block prints from India.",
+                price: 35,
+                category: "Clothing",
+                image: "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=400&q=80",
+                date: "2024-06-02"
+            },
+            {
+                id: 6,
+                name: "Recycled Glass Earrings",
+                desc: "Colorful earrings made from recycled glass beads.",
+                price: 18,
+                category: "Jewelry",
+                image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
+                date: "2024-05-30"
+            },
+            {
+                id: 7,
+                name: "Handstitched Journal",
+                desc: "A unique journal with handstitched cover, perfect for gifting.",
+                price: 20,
+                category: "Gifts",
+                image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
+                date: "2024-06-04"
+            },
+            {
+                id: 8,
+                name: "Woven Basket",
+                desc: "Multipurpose basket, handwoven from natural fibers.",
+                price: 40,
+                category: "Home Decor",
+                image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
+                date: "2024-05-29"
+            }
+        ];
+
+        // Render products
+        function renderProducts(list) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            if(list.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--primary);font-size:1.2rem;">No products found.</div>';
+                return;
+            }
+            list.forEach(prod => {
+                grid.innerHTML += `
+                    <div class="product-card">
+                        <img src="${prod.image}" alt="${prod.name}" class="product-img">
+                        <div class="product-info">
+                            <div class="product-name">${prod.name}</div>
+                            <div class="product-desc">${prod.desc}</div>
+                            <div class="product-price">$${prod.price.toFixed(2)}</div>
+                            <div class="product-actions">
+                                <button>Add to Cart</button>
+                                <button>Buy Now</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Filtering logic
+        function filterProducts() {
+            const search = document.getElementById('searchInput').value.trim().toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let filtered = products.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(search);
+                const matchesCategory = !category || p.category === category;
+                const matchesPrice = p.price >= minPrice && p.price <= maxPrice;
+                return matchesSearch && matchesCategory && matchesPrice;
+            });
+
+            if(sortBy === 'low-high') {
+                filtered.sort((a,b) => a.price - b.price);
+            } else if(sortBy === 'high-low') {
+                filtered.sort((a,b) => b.price - a.price);
+            } else if(sortBy === 'newest') {
+                filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+            }
+
+            renderProducts(filtered);
+        }
+
+        // Event listeners for filters
+        document.getElementById('searchInput').addEventListener('input', filterProducts);
+        document.getElementById('categoryFilter').addEventListener('change', filterProducts);
+        document.getElementById('minPrice').addEventListener('input', filterProducts);
+        document.getElementById('maxPrice').addEventListener('input', filterProducts);
+        document.getElementById('sortBy').addEventListener('change', filterProducts);
+
+        // Initial render
+        renderProducts(products);
+    </script>
+</body>
+</html>

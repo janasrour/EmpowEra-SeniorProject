@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmpowerA - Donations Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .campaigns-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .campaign-list {
+            padding: 20px;
+        }
+
+        .campaign-item {
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .campaign-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .campaign-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            flex: 1;
+        }
+
+        .campaign-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .campaign-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .campaign-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .metric-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .campaign-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .recent-donations {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .donation-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s ease;
+        }
+
+        .donation-item:hover {
+            background: #f8f9fa;
+        }
+
+        .donation-item:last-child {
+            border-bottom: none;
+        }
+
+        .donor-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .donor-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .donation-amount {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .donation-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state img {
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .campaign-metrics {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .campaign-actions {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>EmpowerA Donations Management</h1>
+            <p>Manage campaigns, track donations, and empower communities</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalDonations">$0</div>
+                <div class="stat-label">Total Donations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeCampaigns">0</div>
+                <div class="stat-label">Active Campaigns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalDonors">0</div>
+                <div class="stat-label">Total Donors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="monthlyGrowth">+0%</div>
+                <div class="stat-label">Monthly Growth</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="campaigns-section">
+                <div class="section-header">
+                    <h2 class="section-title">Campaigns</h2>
+                    <button class="btn btn-primary" onclick="openModal('campaignModal')">
+                        ➕ Add Campaign
+                    </button>
+                </div>
+                <div class="campaign-list" id="campaignList">
+                    <!-- Campaigns will be populated here -->
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Recent Donations</h3>
+                    </div>
+                    <div class="recent-donations" id="recentDonations">
+                        <!-- Recent donations will be populated here -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Quick Actions</h3>
+                    </div>
+                    <div style="padding: 20px;">
+                        <button class="btn btn-success" style="width: 100%; margin-bottom: 10px;" onclick="generateReport()">
+                            📊 Generate Report
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;" onclick="exportData()">
+                            💾 Export Data
+                        </button>
+                        <button class="btn btn-primary" style="width: 100%;" onclick="viewAnalytics()">
+                            📈 View Analytics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaign Modal -->
+    <div id="campaignModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal('campaignModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Campaign</h2>
+            </div>
+            <form id="campaignForm">
+                <div class="form-group">
+                    <label class="form-label">Campaign Title</label>
+                    <input type="text" class="form-control" id="campaignTitle" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-control" id="campaignCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="education">Technology Student Empowerment</option>
+                        <option value="materials">Support with Raw Materials</option>
+                        <option value="handicrafts">Support with Handicrafts</option>
+                        <option value="awareness">Support Awareness Events</option>
+                        <option value="healthcare">Healthcare Support</option>
+                        <option value="environment">Environmental Initiative</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="campaignDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target Amount ($)</label>
+                    <input type="number" class="form-control" id="campaignTarget" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="campaignEndDate" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('campaignModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Campaign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Donations Modal -->
+    <div id="donationsModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <button class="close-modal" onclick="closeModal('donationsModal')">&times;</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="donationsModalTitle">Campaign Donations</h2>
+            </div>
+            <div id="donationsContent">
+                <!-- Donations list will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let campaigns = [
+            {
+                id: 1,
+                title: "Technology Student Empowerment",
+                category: "education",
+                description: "Providing laptops and coding bootcamps for underprivileged students to bridge the digital divide.",
+                target: 50000,
+                raised: 32500,
+                donors: 124,
+                status: "active",
+                endDate: "2025-08-15",
+                donations: [
+                    {donor: "Sarah Johnson", amount: 500, date: "2025-05-18", email: "sarah@email.com"},
+                    {donor: "Mike Chen", amount: 250, date: "2025-05-17", email: "mike@email.com"},
+                    {donor: "Anonymous", amount: 1000, date: "2025-05-16", email: "anonymous@email.com"}
+                ]
+            },
+            {
+                id: 2,
+                title: "Handicrafts Workshop Support",
+                category: "handicrafts",
+                description: "Supporting local artisans with tools, materials, and market access for traditional handicrafts.",
+                target: 25000,
+                raised: 18750,
+                donors: 87,
+                status: "active",
+                endDate: "2025-07-30",
+                donations: [
+                    {donor: "Emma Thompson", amount: 300, date: "2025-05-19", email: "emma@email.com"},
+                    {donor: "David Rodriguez", amount: 150, date: "2025-05-18", email: "david@email.com"}
+                ]
+            },
+            {
+                id: 3,
+                title: "Community Awareness Events",
+                category: "awareness",
+                description: "Organizing workshops and seminars to raise awareness about sustainable living and community development.",
+                target: 15000,
+                raised: 8500,
+                donors: 45,
+                status: "active",
+                endDate: "2025-09-10",
+                donations: [
+                    {donor: "Lisa Wang", amount: 200, date: "2025-05-19", email: "lisa@email.com"}
+                ]
+            }
+        ];
+
+        let allDonations = [];
+        
+        // Initialize the dashboard
+        function initDashboard() {
+            // Flatten all donations for recent donations display
+            campaigns.forEach(campaign => {
+                campaign.donations.forEach(donation => {
+                    allDonations.push({
+                        ...donation,
+                        campaignTitle: campaign.title,
+                        campaignId: campaign.id
+                    });
+                });
+            });
+            
+            // Sort donations by date (most recent first)
+            allDonations.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            updateStats();
+            renderCampaigns();
+            renderRecentDonations();
+        }
+
+        function updateStats() {
+            const totalDonations = campaigns.reduce((sum, campaign) => sum + campaign.raised, 0);
+            const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
+            const totalDonors = campaigns.reduce((sum, campaign) => sum + campaign.donors, 0);
+            
+            document.getElementById('totalDonations').textContent = '$' + totalDonations.toLocaleString();
+            document.getElementById('activeCampaigns').textContent = activeCampaigns;
+            document.getElementById('totalDonors').textContent = totalDonors;
+            document.getElementById('monthlyGrowth').textContent = '+12.5%';
+        }
+
+        function renderCampaigns() {
+            const campaignList = document.getElementById('campaignList');
+            
+            if (campaigns.length === 0) {
+                campaignList.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: 20px;">📝</div>
+                        <h3>No campaigns yet</h3>
+                        <p>Create your first campaign to start raising funds for your cause.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            campaignList.innerHTML = campaigns.map(campaign => {
+                const progressPercentage = Math.min((campaign.raised / campaign.target) * 100, 100);
+                const daysLeft = Math.ceil((new Date(campaign.endDate) - new Date()) / (1000 * 60 * 60 * 24));
+                
+                return `
+                    <div class="campaign-item">
+                        <div class="campaign-header">
+                            <div style="flex: 1;">
+                                <div class="campaign-title">${campaign.title}</div>
+                                <span class="campaign-status status-${campaign.status}">${campaign.status}</span>
+                            </div>
+                        </div>
+                        <div class="campaign-description">${campaign.description}</div>
+                        <div class="campaign-metrics">
+                            <div class="metric">
+                                <div class="metric-value">$${campaign.raised.toLocaleString()}</div>
+                                <div class="metric-label">Raised</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">$${campaign.target.toLocaleString()}</div>
+                                <div class="metric-label">Target</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${campaign.donors}</div>
+                                <div class="metric-label">Donors</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-value">${daysLeft > 0 ? daysLeft : 0}</div>
+                                <div class="metric-label">Days Left</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <div style="text-align: center; margin-top: 10px; font-size: 0.9rem; color: #666;">
+                            ${progressPercentage.toFixed(1)}% of target reached
+                        </div>
+                        <div class="campaign-actions">
+                            <button class="btn btn-primary btn-small" onclick="viewDonations(${campaign.id})">
+                                👥 View Donors (${campaign.donations.length})
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="editCampaign(${campaign.id})">
+                                ✏️ Edit
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteCampaign(${campaign.id})">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRecentDonations() {
+            const recentDonations = document.getElementById('recentDonations');
+            const latestDonations = allDonations.slice(0, 10);
+            
+            if (latestDonations.length === 0) {
+                recentDonations.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 2rem; margin-bottom: 15px;">💰</div>
+                        <p>No donations yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            recentDonations.innerHTML = latestDonations.map(donation => `
+                <div class="donation-item">
+                    <div class="donor-info">
+                        <span class="donor-name">${donation.donor}</span>
+                        <span class="donation-amount">$${donation.amount}</span>
+                    </div>
+                    <div class="donation-details">
+                        ${donation.campaignTitle} • ${new Date(donation.date).toLocaleDateString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function viewDonations(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (!campaign) return;
+
+            document.getElementById('donationsModalTitle').textContent = `${campaign.title} - Donors`;
+            
+            const donationsContent = document.getElementById('donationsContent');
+            if (campaign.donations.length === 0) {
+                donationsContent.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 2rem; margin-bottom: 15px;">👤</div>
+                        <p>No donations yet for this campaign</p>
+                    </div>
+                `;
+            } else {
+                donationsContent.innerHTML = `
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${campaign.donations.map(donation => `
+                            <div class="donation-item">
+                                <div class="donor-info">
+                                    <span class="donor-name">${donation.donor}</span>
+                                    <span class="donation-amount">$${donation.amount}</span>
+                                </div>
+                                <div class="donation-details">
+                                    ${donation.email} • ${new Date(donation.date).toLocaleDateString()}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="padding: 20px; border-top: 1px solid #eee; margin-top: 20px;">
+                        <strong>Total: $${campaign.raised.toLocaleString()} from ${campaign.donors} donors</strong>
+                    </div>
+                `;
+            }
+            
+            openModal('donationsModal');
+        }
+
+        function editCampaign(campaignId) {
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (!campaign) return;
+
+            // Pre-fill the form with existing data
+            document.getElementById('campaignTitle').value = campaign.title;
+            document.getElementById('campaignCategory').value = campaign.category;
+            document.getElementById('campaignDescription').value = campaign.description;
+            document.getElementById('campaignTarget').value = campaign.target;
+            document.getElementById('campaignEndDate').value = campaign.endDate;
+            
+            // Change modal title and form action
+            document.querySelector('#campaignModal .modal-title').textContent = 'Edit Campaign';
+            document.getElementById('campaignForm').setAttribute('data-editing', campaignId);
+            
+            openModal('campaignModal');
+        }
+
+        function deleteCampaign(campaignId) {
+            if (confirm('Are you sure you want to delete this campaign? This action cannot be undone.')) {
+                campaigns = campaigns.filter(c => c.id !== campaignId);
+                
+                // Update allDonations array
+                allDonations = allDonations.filter(d => d.campaignId !== campaignId);
+                
+                updateStats();
+                renderCampaigns();
+                renderRecentDonations();
+                
+                alert('Campaign deleted successfully!');
+            }
+        }
+
+        // Form submission handler
+        document.getElementById('campaignForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('campaignTitle').value,
+                category: document.getElementById('campaignCategory').value,
+                description: document.getElementById('campaignDescription').value,
+                target: parseInt(document.getElementById('campaignTarget').value),
+                endDate: document.getElementById('campaignEndDate').value
+            };
+            
+            const editingId = this.getAttribute('data-editing');
+            
+            if (editingId) {
+                // Update existing campaign
+                const campaign = campaigns.find(c => c.id === parseInt(editingId));
+                if (campaign) {
+                    Object.assign(campaign, formData);
+                    alert('Campaign updated successfully!');
+                }
+                this.removeAttribute('data-editing');
+                document.querySelector('#campaignModal .modal-title').textContent = 'Add New Campaign';
+            } else {
+                // Create new campaign
+                const newCampaign = {
+                    id: Date.now(),
+                    ...formData,
+                    raised: 0,
+                    donors: 0,
+                    status: 'active',
+                    donations: []
+                };
+                campaigns.push(newCampaign);
+                alert('Campaign created successfully!');
+            }
+            
+            // Reset form and close modal
+            this.reset();
+            closeModal('campaignModal');
+            
+            // Update display
+            updateStats();
+            renderCampaigns();
+        });
+
+        // Quick action functions
+        function generateReport() {
+            alert('Generating comprehensive donation report...\n\nThis would typically generate a PDF report with:\n- Campaign performance metrics\n- Donor analytics\n- Revenue trends\n- Top performing campaigns');
+        }
+
+        function exportData() {
+            alert('Exporting data...\n\nThis would typically export:\n- Campaign data (CSV/Excel)\n- Donor information\n- Transaction history\n- Analytics data');
+        }
+
+        function viewAnalytics() {
+            alert('Opening analytics dashboard...\n\nThis would typically show:\n- Donation trends over time\n- Campaign performance comparison\n- Donor demographics\n- Geographic distribution\n- ROI metrics');
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

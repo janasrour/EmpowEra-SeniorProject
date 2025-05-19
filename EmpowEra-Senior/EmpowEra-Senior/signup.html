@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign up Page</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+    <style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        width: 100%; 
+        height: 100vh; 
+        background-image: url('images/signup.jpg'); 
+        background-size: cover; 
+        background-position: center;
+        background-color: rgba(255, 255, 255, 0.5);
+        background-blend-mode: lighten;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            padding: 20px;
+            width: 60%;
+            max-width: 800px;
+        }
+        .form-section {
+            flex: 1;
+        }
+        .form-section h1 {
+            color: rgba(65, 65, 248, 0.774);
+            text-align: center;
+        }
+        .form-section label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-section input[type="text"],
+        .form-section input[type="password"] {
+            width: 90%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .image-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .option {
+            display: inline-block;
+            width: 120px;
+            padding: 15px;
+            margin: 20px;
+            background-color:  #00489b;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, background-color 0.3s;
+            position: relative;
+        }
+        .option:hover {
+            transform: translateY(-5px);
+            background-color: skyblue;
+            color: navy;
+        }
+        .option i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:fixed; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link no-underline active" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <style>
+        .custom-nav-link.no-underline.active,
+        .custom-nav-link.no-underline:focus,
+        .custom-nav-link.no-underline:hover {
+            color: #c9bdbd !important;
+            text-decoration: none !important;
+        }
+    </style>
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove blue color from Login link */
+        .custom-nav-link.no-underline.active,
+        .custom-nav-link.no-underline:focus,
+        .custom-nav-link.no-underline:hover {
+            color: #c9bdbd !important;
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        .navbar-light .navbar-brand {
+            color: #0d6efd !important;
+        }
+        /* Remove blue underline from Login link */
+        .navbar-light .navbar-nav .nav-link.no-underline.active {
+            color: #c9bdbd !important;
+            text-decoration: none !important;
+        }
+    </style>
+    <div class="container">
+        <div class="form-section">
+            <h1>Sign up</h1>
+            <br>
+            <p style="margin-top: -10px; font-size: 1.5rem; color: rgb(28, 5, 92); margin-left: 4rem; font-style: italic;">How do you like to join us?</p>
+            <div>
+                <a href="Lsignup.html" class="option">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Learner</span>
+                </a>
+                <a href="Csignup.html" class="option">
+                    <i class="fas fa-user"></i>
+                    <span>Customer</span>
+                </a>
+            </div>
+            
+            <div>
+                <a href="Ssignup.html" class="option">
+                    <i class="fas fa-store"></i>
+                    <span>Seller</span>
+                </a>
+                <a href="Isignup.html" class="option">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Instructor</span>
+                </a>
+            </div>
+        </div>
+          <div class="image-section">
+            <img src="images/logo.jpeg" alt="Login Image">
+        </div>  
+        </div>
+        
+    </div>
+
+    <style>
+        .container {
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

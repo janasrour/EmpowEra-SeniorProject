@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>EmpowEra - A New Era of Learning and Giving</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        .hero-section {
+            background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') center center/cover no-repeat;
+            min-height: 70vh;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .carousel-item {
+            min-height: 90vh;
+        }
+        .hero-overlay {
+            background: rgba(0,0,0,0.5);
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+        }
+        .service-card i {
+            font-size: 2.5rem;
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+        .newsletter-box {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+        }
+        .footer-social a {
+            color: #fff;
+            margin-right: 1rem;
+            font-size: 1.3rem;
+            transition: color 0.2s;
+        }
+        .footer-social a:hover {
+            color: #0d6efd;
+        }
+        .gallery-item {
+    overflow: hidden;
+    border-radius: 16px;
+    border: 4px solid #0d6efd33; /* soft blue border */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    animation: floatAlt 6s ease-in-out infinite;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    animation: fadeIn 1.2s forwards;
+    border-radius: 12px;
+    transition: transform 0.4s ease, filter 0.3s;
+    filter: grayscale(20%) brightness(1);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.1);
+    filter: grayscale(0%) brightness(1.1);
+}
+
+.gallery-item:hover {
+    box-shadow: 0 12px 36px rgba(13, 110, 253, 0.3);
+    transform: translateY(-8px) scale(1.03);
+    z-index: 5;
+}
+.gallery-item-1,
+.gallery-item-2,
+.gallery-item-3,
+.gallery-item-4,
+.gallery-item-5,
+.gallery-item-6 {
+    transform: none;
+}
+@keyframes floatAlt {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+.gallery-mosaic {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(3, 150px);
+    gap: 16px;
+}
+@media (max-width: 991.98px) {
+    .gallery-mosaic {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 120px);
+        gap: 12px;
+    }
+}
+@media (max-width: 600px) {
+.gallery-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 200px 180px 200px; /* Increased height */
+    gap: 18px;
+    position: relative;
+}
+
+}
+
+
+    </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-offset="70">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:relative; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class="nav-link active custom-nav-link home-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link when navbar is sticky/fixed */
+        .navbar.sticky-top .home-link.active {
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link in .navbar-light as well */
+        .navbar-light.sticky-top .navbar-nav .home-link.active {
+            text-decoration: none !important;
+        }
+        .navbar-light .navbar-brand {
+            color: #0d6efd !important;
+        }
+    </style>
+    </nav>
+
+    <!-- Hero Section as Image Slider -->
+   <section class="hero-section position-relative d-flex p-0" id="home">
+    <div id="heroCarousel" class="carousel slide w-100" data-bs-ride="carousel" data-bs-interval="2000" data-bs-pause="false">
+        <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active" style="background: url('https://plus.unsplash.com/premium_photo-1661526579038-aea87aecd898?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHRlYW13b3JrfGVufDB8fDB8fHww') center center/cover no-repeat; min-height:90vh; position:relative;">
+                <div class="hero-overlay"></div>
+                <div class="container-fluid hero-content d-flex flex-column align-items-start justify-content-end text-start ps-4" style="min-height:70vh; padding-bottom: 4rem;" data-aos="fade-up">
+                    <h1 class="fw-bold mb-3">
+                        <span style="font-size:3rem;">EmpowEra:</span>
+                        <span style="font-size:2rem; font-weight:700;">A New Era of Learning and Giving</span>
+                    </h1>
+                    <p class="lead mb-4 ms-0 ps-0" style="color:#ffffff;">Join a vibrant community focused on education, skill-building, and social impact.</p>
+                    <a href="signup.html" class="btn btn-lg btn-warning fw-semibold shadow">Join Us</a>
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item" style="background: url('https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1500&q=80') center center/cover no-repeat; min-height:90vh; position:relative;">
+                <div class="hero-overlay"></div>
+                <div class="container-fluid hero-content d-flex flex-column align-items-start justify-content-end text-start ps-4" style="min-height:70vh; padding-bottom: 4rem;" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold mb-3">Unlock Your Potential</h1>
+                    <p class="lead mb-4 ms-0 ps-0" style="color:#ffffff;">Explore courses, workshops, and events designed for your growth.</p>
+                    <a href="courses.html" class="btn btn-lg btn-warning fw-semibold shadow">Browse Courses</a>
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item" style="background: url('https://shpbeds.org/wp-content/uploads/2023/03/Donation.png') center center/cover no-repeat; min-height:90vh; position:relative;">
+                <div class="hero-overlay"></div>
+                <div class="container-fluid hero-content d-flex flex-column align-items-start justify-content-end text-start ps-4" style="min-height:70vh; padding-bottom: 4rem;" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold mb-3">Make a Difference</h1>
+                    <p class="lead mb-4 ms-0 ps-0" style="color:#ffffff;">Support artisans and give back to the community through our platform.</p>
+                    <a href="donate.html" class="btn btn-lg btn-warning fw-semibold shadow">Donate Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators mb-4">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+    </div>
+   </section>
+
+  <!-- About Us Section -->
+<section id="about" style="padding: 60px 20px; background: #f9f9f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 30px;">
+
+    <!-- Text Content -->
+    <div style="flex: 1 1 500px;">
+      <h2 class="text-animate" style="font-size: 3em; color: #1271cf; margin-bottom: 20px;">About Us</h2>
+      <p class="text-animate" style="font-size: 1.6em; color: #0f3250; line-height: 1.6;">
+        EmpowEra is a community-driven platform dedicated to empowering individuals through education, creativity, and social impact.
+        We believe in lifelong learning, supporting local artisans, and fostering a spirit of giving back. Our platform offers a wide range of courses, workshops, and events designed to help you unlock your potential and make a difference.
+        Join us to connect with like-minded people, develop new skills, and contribute to a brighter future for all.
+      </p>
+    </div>
+
+
+    <!-- Image Gallery -->
+    <div style="flex: 1 1 500px;">
+      <div class="gallery-grid">
+        <div class="img-wrap" style="--border-color: #ff6b6b;"><img src="images/courses/course.webp" alt="Gallery 1"></div>
+        <div class="img-wrap" style="--border-color: #6bc9ff;"><img src="images/shop/shop1.jpg" alt="Gallery 2"></div>
+        <div class="img-wrap" style="--border-color: #ffd56b;"><img src="images/team.webp" alt="Gallery 3"></div>
+        <div class="img-wrap" style="--border-color: #6bff95;"><img src="images/shop/shop11.gif" alt="Gallery 4"></div>
+        <div class="img-wrap" style="--border-color: #d66bff;"><img src="images/workshop/workshop2.webp" alt="Gallery 5"></div>
+        <div class="img-wrap" style="--border-color: #6b9eff;"><img src="images/Donation/donation1.webp" alt="Gallery 6"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CSS -->
+  <style>
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .img-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      padding: 6px;
+      background: linear-gradient(45deg, var(--border-color), #ffffff);
+      background-size: 200% 200%;
+      animation: borderPulse 4s linear infinite;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .img-wrap img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+      transition: transform 0.3s ease-in-out;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .img-wrap:hover {
+      transform: scale(1.05);
+    }
+
+    .img-wrap:hover img {
+      transform: scale(1.05);
+    }
+
+    .text-animate {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 1s ease;
+    }
+
+    .text-animate.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes borderPulse {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 500px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const images = document.querySelectorAll('.img-wrap img');
+      const texts = document.querySelectorAll('.text-animate');
+
+      const options = { threshold: 0.1 };
+
+      const observer = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, options);
+
+      images.forEach(img => observer.observe(img));
+      texts.forEach(txt => observer.observe(txt));
+    });
+  </script>
+</section>
+
+<!-- Our Services Section -->
+    <section style="background-color: #f2f6fc; padding: 60px 0;">
+  <div class="container" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+    <h2 style="font-size: 2.8rem; font-weight: 700; color: #1992f7;">Our Services</h2>
+    <p style="max-width: 800px; margin: 0 auto 40px; color: #555; font-size: 1.1rem;">
+      At EmpowEra, we bring together learning, earning, and giving — offering courses, workshops, a community shop,
+      donations, and events that empower individuals and uplift communities.
+    </p>
+
+    <div class="services-grid">
+        
+      <div class="service-box border-primary" data-aos="zoom-in-up">
+        <div class="icon-circle bg-primary"><i class="fas fa-laptop-code"></i></div>
+        <h5>Courses</h5>
+        <p>Learn something new today! Our expert-led courses help you build real-world skills and chase your goals.</p>
+        <a href="courses.html" class="text-primary">Learn More →</a>
+      </div>
+
+      <div class="service-box border-warning" data-aos="zoom-in-up" data-aos-delay="100">
+        <div class="icon-circle bg-warning"><i class="fas fa-store"></i></div>
+        <h5>Shop</h5>
+        <p>Discover handmade items by local talents — every purchase helps someone grow their future.</p>
+        <a href="shop.html" class="text-warning">Learn More →</a>
+      </div>
+
+      <div class="service-box border-purple" data-aos="zoom-in-up" data-aos-delay="200">
+        <div class="icon-circle bg-purple"><i class="fas fa-hand-holding-heart"></i></div>
+        <h5>Donations</h5>
+        <p>Give with heart — your support helps educate, uplift, and empower those in need.</p>
+        <a href="donations.html" class="text-purple">Learn More →</a>
+      </div>
+
+      <div class="service-box border-danger" data-aos="zoom-in-up" data-aos-delay="300">
+        <div class="icon-circle bg-danger"><i class="fas fa-calendar-alt"></i></div>
+        <h5>Events</h5>
+        <p>Be part of something meaningful — connect, learn, and grow at inspiring events.</p>
+        <a href="events.html" class="text-danger">Learn More →</a>
+      </div>
+
+      <div class="service-box border-info" data-aos="zoom-in-up" data-aos-delay="400">
+        <div class="icon-circle bg-info"><i class="fas fa-paint-brush"></i></div>
+        <h5>Workshops</h5>
+        <p>Join hands-on workshops that unlock your creativity and build practical skills.</p>
+        <a href="workshops.html" class="text-info">Learn More →</a>
+      </div>
+
+      <div class="service-box border-primary" data-aos="zoom-in-up" data-aos-delay="500">
+        <div class="icon-circle bg-primary"><i class="fas fa-hands-helping"></i></div>
+        <h5>Volunteer & Support</h5>
+        <p>Contribute your time and skills to make a real difference in your community.</p>
+        <a href="volunteer.html" class="text-primary">Learn More →</a>
+      </div>
+    </div>
+  </div>
+
+  <style>
+  .bg-primary    { background: #1992f7; }
+  .bg-warning    { background: #ff9800; }
+  .bg-danger     { background: #e53935; }
+  .bg-info       { background: #00bcd4; }
+  .bg-purple     { background: #a855f7; }
+
+  .border-primary { border: 2px solid #1992f7; }
+  .border-warning { border: 2px solid #ff9800; }
+  .border-danger  { border: 2px solid #e53935; }
+  .border-info    { border: 2px solid #00bcd4; }
+  .border-purple  { border: 2px solid #a855f7; }
+
+  .text-primary { color: #1992f7; }
+  .text-warning { color: #ff9800; }
+  .text-danger  { color: #e53935; }
+  .text-info    { color: #00bcd4; }
+  .text-purple  { color: #a855f7; }
+
+  .services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .service-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 20px;
+    width: 300px;
+    text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+
+  .service-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+  }
+
+  .icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .icon-circle i {
+    color: white;
+    font-size: 1.8rem;
+  }
+
+  .service-box h5 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .service-box p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 14px;
+  }
+
+  .service-box a {
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .service-box {
+      width: 90%;
+    }
+  }
+</style>
+
+
+  <!-- Scripts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init();</script>
+     </section>
+
+<!-- Testimonials + Newsletter Section -->
+    <section class="py-0 bg-light" id="testimonials-newsletter">
+  <div class="container px-3">
+
+    <!-- Improved Testimonials Section -->
+<section class="py-5 bg-light" id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="fw-bold">What Our Members Say</h2>
+      <p class="text-muted">Real voices sharing real experiences.</p>
+    </div>
+
+    <div class="row g-4" data-aos="fade-up" data-aos-delay="100">
+      <!-- Testimonial Card 1 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 p-4 text-center bg-white hover-shadow transition">
+          <img src="https://i.pravatar.cc/100?img=12" class="rounded-circle mx-auto mb-3" alt="Aisha K." width="80" height="80">
+          <p class="fst-italic text-muted mb-2">"EmpowEra helped me gain new skills and confidence to start my own business!"</p>
+          <h5 class="fw-bold mb-0">Aisha K.</h5>
+          <small class="text-primary">Entrepreneur</small>
+        </div>
+      </div>
+
+      <!-- Testimonial Card 2 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 p-4 text-center bg-white hover-shadow transition">
+          <img src="https://i.pravatar.cc/100?img=20" class="rounded-circle mx-auto mb-3" alt="Samuel O." width="80" height="80">
+          <p class="fst-italic text-muted mb-2">"The workshops and community events are inspiring and truly empowering."</p>
+          <h5 class="fw-bold mb-0">Samuel O.</h5>
+          <small class="text-primary">Community Member</small>
+        </div>
+      </div>
+
+      <!-- Testimonial Card 3 -->
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 p-4 text-center bg-white hover-shadow transition">
+          <img src="https://i.pravatar.cc/100?img=35" class="rounded-circle mx-auto mb-3" alt="Maria L." width="80" height="80">
+          <p class="fst-italic text-muted mb-2">"I love supporting artisans through the shop and giving back through donations."</p>
+          <h5 class="fw-bold mb-0">Maria L.</h5>
+          <small class="text-primary">Supporter</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Newsletter Section -->
+<section id="newsletter" style="background-color: #94bedb;">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+
+      <!-- Text Content -->
+     <div class="col-lg-6" data-aos="fade-right">
+  <h2 class="fw-bold mb-3" style="color: rgb(255, 255, 255);">Join Our Community</h2>
+  <p class="mb-4" style="color: rgb(3, 3, 59);">
+    Stay updated with our latest courses, events, and inspiring stories. Get tips, resources, and empowerment delivered to your inbox.
+  </p>
+  <ul class="list-unstyled" style="color: rgb(25, 62, 163);">
+    <li><i class="bi bi-check-circle-fill me-2" style="color: #cc8400;"></i> Weekly Inspiration</li>
+    <li><i class="bi bi-check-circle-fill me-2" style="color: #cc8400;"></i> Course Launches</li>
+    <li><i class="bi bi-check-circle-fill me-2" style="color: #cc8400;"></i> Community Events</li>
+  </ul>
+</div>
+
+
+
+      <!-- Signup Form -->
+       
+      <div class="col-lg-6" data-aos="fade-left" >
+        <div class="p-4 p-md-5 bg-white text-dark rounded shadow">
+          <h4 class="fw-bold mb-3">Subscribe to Our Newsletter</h4>
+          <form>
+            <div class="mb-3">
+              <label for="newsletterEmail" class="form-label">Email address</label>
+              <input type="email" class="form-control form-control-lg" id="newsletterEmail" placeholder="you@example.com" required>
+            </div>
+            <button type="submit" class="btn btn-warning btn-lg w-100 fw-bold">Subscribe Now</button>
+          </form>
+        </div>
+        <br>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    </div>
+    <br><br>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white pt-5 pb-3" id="footer">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-md-4">
+                    <h5 class="fw-bold">EmpowEra</h5>
+                    <p>Empowering communities through education, creativity, and giving back.</p>
+                    <div class="footer-social mt-3">
+                        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="courses.html" class="text-white text-decoration-none">Courses</a></li>
+                        <li><a href="shop.html" class="text-white text-decoration-none">Shop</a></li>
+                        <li><a href="events.html" class="text-white text-decoration-none">Events</a></li>
+                        <li><a href="workshops.html" class="text-white text-decoration-none">Workshops</a></li>
+                        <li><a href="donate.html" class="text-white text-decoration-none">Donate</a></li>
+                        <li><a href="#about" class="text-white text-decoration-none">About</a></li>
+                        <li><a href="#contact" class="text-white text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold mb-3">Contact</h6>
+                    <p class="mb-1"><i class="bi bi-envelope me-2"></i>info@empowera.org</p>
+                    <p class="mb-1"><i class="bi bi-telephone me-2"></i>+961 76 304 691</p>
+                    <p><i class="bi bi-geo-alt me-2"></i>Lebanon-Bekaa</p>
+                    <a href="newsletter.html" class="btn btn-outline-light btn-sm mt-2">Newsletter</a>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <small>&copy; 2025 EmpowEra. All rights reserved.</small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+</body>
+</html>

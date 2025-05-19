@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empowera - Events Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-nav {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .nav-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .content-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .panel-title {
+            font-size: 1.8rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .add-event-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .add-event-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-upcoming {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-ongoing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .event-details {
+            margin-bottom: 1rem;
+        }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .event-detail i {
+            margin-right: 0.5rem;
+            width: 16px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .feedback-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .feedback-section {
+            margin-top: 2rem;
+        }
+
+        .feedback-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .attendee-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .rating {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .star {
+            color: #ffc107;
+        }
+
+        .feedback-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Empowera Events Management</h1>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-nav">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-panel="events">All Events</button>
+                <button class="nav-btn" data-panel="analytics">Analytics</button>
+                <button class="nav-btn" data-panel="feedback">Feedback</button>
+            </div>
+        </div>
+
+        <div id="events-panel" class="content-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">Events Management</h2>
+                <button class="add-event-btn" onclick="openModal('addEventModal')">
+                    + Add New Event
+                </button>
+            </div>
+
+            <div class="events-grid" id="eventsGrid">
+                <!-- Events will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div id="analytics-panel" class="content-panel hidden">
+            <div class="panel-header">
+                <h2 class="panel-title">Events Analytics</h2>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEvents">0</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="upcomingEvents">0</div>
+                    <div class="stat-label">Upcoming Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalAttendees">0</div>
+                    <div class="stat-label">Total Attendees</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgRating">0.0</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback-panel" class="content-panel hidden">
+            <div class="panel-header">
+                <h2 class="panel-title">Event Feedback</h2>
+            </div>
+
+            <div class="feedback-section" id="feedbackSection">
+                <!-- Feedback will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Event Modal -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Event</h3>
+                <button class="close-btn" onclick="closeModal('addEventModal')">&times;</button>
+            </div>
+
+            <form id="eventForm">
+                <div class="form-group">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" class="form-input" id="eventTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="eventDescription" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="eventDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="time" class="form-input" id="eventTime" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Location</label>
+                    <input type="text" class="form-input" id="eventLocation" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Speaker</label>
+                        <input type="text" class="form-input" id="eventSpeaker" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Total Seats</label>
+                        <input type="number" class="form-input" id="eventSeats" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="eventCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="seminar">Seminar</option>
+                        <option value="conference">Conference</option>
+                        <option value="networking">Networking</option>
+                        <option value="training">Training</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Create Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Event Feedback</h3>
+                <button class="close-btn" onclick="closeModal('feedbackModal')">&times;</button>
+            </div>
+
+            <div id="feedbackContent">
+                <!-- Feedback content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let events = [
+            {
+                id: 1,
+                title: "Women in Tech Leadership Summit",
+                description: "Empowering women leaders in technology sector",
+                date: "2025-06-15",
+                time: "09:00",
+                location: "Convention Center, Beirut",
+                speaker: "Dr. Sarah Johnson",
+                totalSeats: 200,
+                bookedSeats: 150,
+                category: "conference",
+                status: "upcoming",
+                feedback: [
+                    {
+                        attendee: "Maria Garcia",
+                        rating: 5,
+                        comment: "Excellent event! Very inspiring speakers and great networking opportunities."
+                    },
+                    {
+                        attendee: "Fatima Al-Rashid",
+                        rating: 4,
+                        comment: "Great content but could use better time management."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Entrepreneur Skills Workshop",
+                description: "Building essential skills for new entrepreneurs",
+                date: "2025-05-25",
+                time: "14:00",
+                location: "Empowera Hub, Tripoli",
+                speaker: "Ahmed Hassan",
+                totalSeats: 50,
+                bookedSeats: 45,
+                category: "workshop",
+                status: "ongoing",
+                feedback: []
+            },
+            {
+                id: 3,
+                title: "Digital Marketing Seminar",
+                description: "Latest trends in digital marketing for small businesses",
+                date: "2025-04-20",
+                time: "10:00",
+                location: "Business Center, Sidon",
+                speaker: "Layla Khoury",
+                totalSeats: 80,
+                bookedSeats: 80,
+                category: "seminar",
+                status: "completed",
+                feedback: [
+                    {
+                        attendee: "Nour Habib",
+                        rating: 5,
+                        comment: "Amazing insights! Will definitely apply these strategies to my business."
+                    }
+                ]
+            }
+        ];
+
+        let currentEditId = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            renderEvents();
+            updateAnalytics();
+            renderFeedback();
+            
+            // Add event listeners for navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchPanel(this.dataset.panel);
+                });
+            });
+
+            // Form submission
+            document.getElementById('eventForm').addEventListener('submit', handleEventSubmit);
+        });
+
+        function switchPanel(panelName) {
+            // Update navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
+
+            // Show/hide panels
+            document.querySelectorAll('.content-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            document.getElementById(`${panelName}-panel`).classList.remove('hidden');
+
+            // Update content if needed
+            if (panelName === 'analytics') {
+                updateAnalytics();
+            } else if (panelName === 'feedback') {
+                renderFeedback();
+            }
+        }
+
+        function renderEvents() {
+            const eventsGrid = document.getElementById('eventsGrid');
+            eventsGrid.innerHTML = '';
+
+            events.forEach(event => {
+                const eventCard = createEventCard(event);
+                eventsGrid.appendChild(eventCard);
+            });
+        }
+
+        function createEventCard(event) {
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            
+            const statusClass = `status-${event.status}`;
+            const availableSeats = event.totalSeats - event.bookedSeats;
+            
+            card.innerHTML = `
+                <div class="event-header">
+                    <div>
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-status ${statusClass}">
+                            ${event.status.charAt(0).toUpperCase() + event.status.slice(1)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-details">
+                    <div class="event-detail">
+                        <i>📅</i>
+                        <span>${formatDate(event.date)} at ${event.time}</span>
+                    </div>
+                    <div class="event-detail">
+                        <i>📍</i>
+                        <span>${event.location}</span>
+                    </div>
+                    <div class="event-detail">
+                        <i>🎤</i>
+                        <span>${event.speaker}</span>
+                    </div>
+                    <div class="event-detail">
+                        <i>🪑</i>
+                        <span>${event.bookedSeats}/${event.totalSeats} seats (${availableSeats} available)</span>
+                    </div>
+                    <div class="event-detail">
+                        <i>🏷️</i>
+                        <span>${event.category.charAt(0).toUpperCase() + event.category.slice(1)}</span>
+                    </div>
+                </div>
+
+                <div class="event-actions">
+                    <button class="action-btn edit-btn" onclick="editEvent(${event.id})">
+                        Edit
+                    </button>
+                    <button class="action-btn feedback-btn" onclick="viewFeedback(${event.id})">
+                        Feedback (${event.feedback.length})
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteEvent(${event.id})">
+                        Delete
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            if (modalId === 'addEventModal') {
+                resetForm();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('eventForm').reset();
+            document.querySelector('.modal-title').textContent = 'Add New Event';
+            document.querySelector('.submit-btn').textContent = 'Create Event';
+            currentEditId = null;
+        }
+
+        function handleEventSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                title: document.getElementById('eventTitle').value,
+                description: document.getElementById('eventDescription').value,
+                date: document.getElementById('eventDate').value,
+                time: document.getElementById('eventTime').value,
+                location: document.getElementById('eventLocation').value,
+                speaker: document.getElementById('eventSpeaker').value,
+                totalSeats: parseInt(document.getElementById('eventSeats').value),
+                category: document.getElementById('eventCategory').value,
+                bookedSeats: 0,
+                status: 'upcoming',
+                feedback: []
+            };
+
+            if (currentEditId) {
+                // Update existing event
+                const eventIndex = events.findIndex(e => e.id === currentEditId);
+                events[eventIndex] = { ...events[eventIndex], ...formData };
+            } else {
+                // Add new event
+                formData.id = Date.now();
+                events.push(formData);
+            }
+
+            renderEvents();
+            updateAnalytics();
+            closeModal('addEventModal');
+        }
+
+        function editEvent(id) {
+            const event = events.find(e => e.id === id);
+            if (!event) return;
+
+            currentEditId = id;
+            
+            // Fill form with event data
+            document.getElementById('eventTitle').value = event.title;
+            document.getElementById('eventDescription').value = event.description;
+            document.getElementById('eventDate').value = event.date;
+            document.getElementById('eventTime').value = event.time;
+            document.getElementById('eventLocation').value = event.location;
+            document.getElementById('eventSpeaker').value = event.speaker;
+            document.getElementById('eventSeats').value = event.totalSeats;
+            document.getElementById('eventCategory').value = event.category;
+
+            // Update modal title and button
+            document.querySelector('.modal-title').textContent = 'Edit Event';
+            document.querySelector('.submit-btn').textContent = 'Update Event';
+
+            openModal('addEventModal');
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                events = events.filter(e => e.id !== id);
+                renderEvents();
+                updateAnalytics();
+            }
+        }
+
+        function viewFeedback(id) {
+            const event = events.find(e => e.id === id);
+            if (!event) return;
+
+            const feedbackContent = document.getElementById('feedbackContent');
+            
+            if (event.feedback.length === 0) {
+                feedbackContent.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <p>No feedback available for this event yet.</p>
+                    </div>
+                `;
+            } else {
+                const feedbackHtml = event.feedback.map(fb => `
+                    <div class="feedback-item">
+                        <div class="feedback-header">
+                            <span class="attendee-name">${fb.attendee}</span>
+                            <div class="rating">
+                                ${generateStars(fb.rating)}
+                            </div>
+                        </div>
+                        <div class="feedback-text">${fb.comment}</div>
+                    </div>
+                `).join('');
+
+                feedbackContent.innerHTML = `
+                    <h4 style="margin-bottom: 1rem;">Feedback for: ${event.title}</h4>
+                    ${feedbackHtml}
+                `;
+            }
+
+            openModal('feedbackModal');
+        }
+
+        function generateStars(rating) {
+            return Array(5).fill().map((_, i) => 
+                `<span class="star">${i < rating ? '⭐' : '☆'}</span>`
+            ).join('');
+        }
+
+        function updateAnalytics() {
+            const totalEvents = events.length;
+            const upcomingEvents = events.filter(e => e.status === 'upcoming').length;
+            const totalAttendees = events.reduce((sum, e) => sum + e.bookedSeats, 0);
+            
+            const allFeedback = events.flatMap(e => e.feedback);
+            const avgRating = allFeedback.length > 0 
+                ? (allFeedback.reduce((sum, fb) => sum + fb.rating, 0) / allFeedback.length).toFixed(1)
+                : 0.0;
+
+            document.getElementById('totalEvents').textContent = totalEvents;
+            document.getElementById('upcomingEvents').textContent = upcomingEvents;
+            document.getElementById('totalAttendees').textContent = totalAttendees;
+            document.getElementById('avgRating').textContent = avgRating;
+        }
+
+        function renderFeedback() {
+            const feedbackSection = document.getElementById('feedbackSection');
+            const allFeedback = events.flatMap(event => 
+                event.feedback.map(fb => ({ ...fb, eventTitle: event.title }))
+            );
+
+            if (allFeedback.length === 0) {
+                feedbackSection.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #666;">
+                        <p>No feedback available yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const feedbackHtml = allFeedback.map(fb => `
+                <div class="feedback-item">
+                    <div class="feedback-header">
+                        <div>
+                            <span class="attendee-name">${fb.attendee}</span>
+                            <div style="color: #666; font-size: 0.8rem; margin-top: 0.2rem;">
+                                Event: ${fb.eventTitle}
+                            </div>
+                        </div>
+                        <div class="rating">
+                            ${generateStars(fb.rating)}
+                        </div>
+                    </div>
+                    <div class="feedback-text">${fb.comment}</div>
+                </div>
+            `).join('');
+
+            feedbackSection.innerHTML = feedbackHtml;
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeModal(e.target.id);
+            }
+        });
+
+        // Close modal with escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const openModal = document.querySelector('.modal[style*="block"]');
+                if (openModal) {
+                    closeModal(openModal.id);
+                }
+            }
+        });
+
+        // Auto-update event status based on dates
+        function updateEventStatuses() {
+            const today = new Date();
+            const currentDate = today.toISOString().split('T')[0];
+            
+            events.forEach(event => {
+                if (event.date < currentDate && event.status !== 'completed') {
+                    event.status = 'completed';
+                } else if (event.date === currentDate && event.status === 'upcoming') {
+                    event.status = 'ongoing';
+                }
+            });
+        }
+
+        // Call status update on page load and periodically
+        updateEventStatuses();
+        setInterval(updateEventStatuses, 60000); // Check every minute
+
+        // Sample function to simulate adding feedback (for demonstration)
+        function addSampleFeedback() {
+            const sampleFeedbacks = [
+                {
+                    attendee: "Rania Salem",
+                    rating: 5,
+                    comment: "Outstanding event! The networking sessions were particularly valuable."
+                },
+                {
+                    attendee: "Hassan Mahmoud",
+                    rating: 4,
+                    comment: "Great speakers and organization. Would love to see more interactive sessions."
+                },
+                {
+                    attendee: "Lily Chen",
+                    rating: 5,
+                    comment: "This event exceeded my expectations. Very well organized and informative."
+                }
+            ];
+
+            // Add random feedback to random events
+            events.forEach(event => {
+                if (Math.random() > 0.7 && event.feedback.length < 3) {
+                    const randomFeedback = sampleFeedbacks[Math.floor(Math.random() * sampleFeedbacks.length)];
+                    event.feedback.push({...randomFeedback});
+                }
+            });
+        }
+
+        // Export events data (for demonstration)
+        function exportEvents() {
+            const dataStr = JSON.stringify(events, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'empowera-events-export.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        // Seat booking simulation
+        function bookSeats(eventId, seats) {
+            const event = events.find(e => e.id === eventId);
+            if (event && (event.bookedSeats + seats) <= event.totalSeats) {
+                event.bookedSeats += seats;
+                renderEvents();
+                updateAnalytics();
+                return true;
+            }
+            return false;
+        }
+
+        // Search and filter functionality
+        function initializeSearchAndFilter() {
+            // Add search input to the events panel
+            const searchHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <input type="text" id="eventSearch" placeholder="Search events..." 
+                           style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 25px; width: 300px; margin-right: 1rem;">
+                    <select id="eventFilter" style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 25px;">
+                        <option value="">All Categories</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="seminar">Seminar</option>
+                        <option value="conference">Conference</option>
+                        <option value="networking">Networking</option>
+                        <option value="training">Training</option>
+                    </select>
+                    <select id="statusFilter" style="padding: 0.5rem; border: 2px solid #e9ecef; border-radius: 25px; margin-left: 1rem;">
+                        <option value="">All Status</option>
+                        <option value="upcoming">Upcoming</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            `;
+            
+            const eventsPanel = document.getElementById('events-panel');
+            const panelHeader = eventsPanel.querySelector('.panel-header');
+            panelHeader.insertAdjacentHTML('afterend', searchHTML);
+
+            // Add event listeners for search and filter
+            document.getElementById('eventSearch').addEventListener('input', filterEvents);
+            document.getElementById('eventFilter').addEventListener('change', filterEvents);
+            document.getElementById('statusFilter').addEventListener('change', filterEvents);
+        }
+
+        function filterEvents() {
+            const searchTerm = document.getElementById('eventSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('eventFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            const filteredEvents = events.filter(event => {
+                const matchesSearch = event.title.toLowerCase().includes(searchTerm) ||
+                                    event.description.toLowerCase().includes(searchTerm) ||
+                                    event.speaker.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || event.category === categoryFilter;
+                const matchesStatus = !statusFilter || event.status === statusFilter;
+
+                return matchesSearch && matchesCategory && matchesStatus;
+            });
+
+            renderFilteredEvents(filteredEvents);
+        }
+
+        function renderFilteredEvents(filteredEvents) {
+            const eventsGrid = document.getElementById('eventsGrid');
+            eventsGrid.innerHTML = '';
+
+            if (filteredEvents.length === 0) {
+                eventsGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #666;">
+                        <p>No events found matching your criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredEvents.forEach(event => {
+                const eventCard = createEventCard(event);
+                eventsGrid.appendChild(eventCard);
+            });
+        }
+
+        // Initialize search and filter when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                initializeSearchAndFilter();
+            }, 100);
+        });
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Animate out and remove
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Override form submission to show notifications
+        const originalHandleEventSubmit = handleEventSubmit;
+        handleEventSubmit = function(e) {
+            originalHandleEventSubmit(e);
+            showNotification(currentEditId ? 'Event updated successfully!' : 'Event created successfully!');
+        };
+
+        // Override delete function to show notifications
+        const originalDeleteEvent = deleteEvent;
+        deleteEvent = function(id) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                originalDeleteEvent(id);
+                showNotification('Event deleted successfully!');
+            }
+        };
+
+        // Add bulk actions functionality
+        function initializeBulkActions() {
+            const bulkActionsHTML = `
+                <div id="bulkActions" style="margin-bottom: 1rem; display: none;">
+                    <button class="nav-btn" onclick="selectAllEvents()">Select All</button>
+                    <button class="nav-btn" onclick="deselectAllEvents()">Deselect All</button>
+                    <button class="action-btn delete-btn" onclick="bulkDeleteEvents()">Delete Selected</button>
+                    <button class="nav-btn" onclick="exportSelectedEvents()">Export Selected</button>
+                </div>
+            `;
+            
+            const eventsPanel = document.getElementById('events-panel');
+            const searchDiv = eventsPanel.querySelector('div[style*="margin-bottom: 1rem"]');
+            searchDiv.insertAdjacentHTML('afterend', bulkActionsHTML);
+        }
+
+        function toggleBulkMode() {
+            const bulkActions = document.getElementById('bulkActions');
+            const isVisible = bulkActions.style.display !== 'none';
+            bulkActions.style.display = isVisible ? 'none' : 'block';
+            
+            // Add/remove checkboxes from event cards
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                const existingCheckbox = card.querySelector('.bulk-checkbox');
+                if (isVisible && existingCheckbox) {
+                    existingCheckbox.remove();
+                } else if (!isVisible && !existingCheckbox) {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'bulk-checkbox';
+                    checkbox.style.cssText = 'position: absolute; top: 10px; right: 10px; transform: scale(1.2);';
+                    card.style.position = 'relative';
+                    card.appendChild(checkbox);
+                }
+            });
+        }
+
+        // Advanced analytics chart (using CSS for simple visualization)
+        function renderAdvancedAnalytics() {
+            const monthlyData = getMonthlyEventData();
+            const chartHTML = `
+                <div style="background: white; border-radius: 12px; padding: 1.5rem; margin-top: 2rem; box-shadow: 0 3px 15px rgba(0,0,0,0.08);">
+                    <h3 style="margin-bottom: 1rem; color: #333;">Events by Month</h3>
+                    <div class="chart-container" style="display: flex; align-items: end; gap: 1rem; height: 200px; padding: 1rem; border-bottom: 2px solid #e9ecef;">
+                        ${monthlyData.map(data => `
+                            <div class="chart-bar" style="flex: 1; display: flex; flex-direction: column; align-items: center;">
+                                <div style="background: linear-gradient(135deg, #667eea, #764ba2); width: 100%; height: ${data.count * 20}px; border-radius: 4px 4px 0 0; margin-bottom: 0.5rem;"></div>
+                                <span style="font-size: 0.8rem; color: #666;">${data.month}</span>
+                                <span style="font-size: 0.7rem; color: #999;">${data.count}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            const analyticsPanel = document.getElementById('analytics-panel');
+            analyticsPanel.insertAdjacentHTML('beforeend', chartHTML);
+        }
+
+        function getMonthlyEventData() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const monthlyData = months.map(month => ({ month, count: 0 }));
+            
+            events.forEach(event => {
+                const eventMonth = new Date(event.date).getMonth();
+                if (eventMonth < months.length) {
+                    monthlyData[eventMonth].count++;
+                }
+            });
+            
+            return monthlyData;
+        }
+
+        // Initialize advanced features
+        setTimeout(() => {
+            if (document.getElementById('analytics-panel')) {
+                renderAdvancedAnalytics();
+            }
+        }, 500);
+    </script>
+</body>
+</html>

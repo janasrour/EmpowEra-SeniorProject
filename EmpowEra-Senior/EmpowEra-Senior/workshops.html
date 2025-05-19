@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workshops | EmpowEra</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .footer {
+      background-color: #0d6efd;
+      color: white;
+      padding: 1rem 0;
+    }
+
+    .hero-section {
+      min-height: 40vh;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .hero-overlay {
+      background: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 4rem 2rem;
+      color: white;
+    }
+
+    .filter-bar {
+      background-color: #ffffff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-top: -2rem;
+      z-index: 10;
+      position: relative;
+    }
+
+    .workshop-card {
+      border: none;
+      border-radius: 15px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .workshop-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn-outline-primary {
+      border-radius: 50px;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:relative; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link active custom-nav-link workshop-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link when navbar is sticky/fixed */
+        .navbar.sticky-top .home-link.active {
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link in .navbar-light as well */
+        .navbar-light.sticky-top .navbar-nav .workshop-link.active {
+            text-decoration: none !important;
+        }
+        .navbar-light .navbar-brand {
+            color: #0d6efd !important;
+        }
+    </style>
+
+<!-- Hero Slider -->
+<section id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+  <div class="carousel-inner">
+    <div class="carousel-item active hero-section" style="background-image: url('https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1500&q=80');">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content text-center">
+        <h1 class="display-4">Learn. Build. Grow.</h1>
+        <p class="lead">Join hands-on workshops that spark innovation and real-world skills.</p>
+      </div>
+    </div>
+    <div class="carousel-item hero-section" style="background-image: url('https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1500&q=80');">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content text-center">
+        <h1 class="display-4">Empower Through Learning</h1>
+        <p class="lead">From coding bootcamps to leadership sessions — we cover it all.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Filter Bar -->
+<div class="container filter-bar mt-4 d-flex flex-wrap justify-content-center gap-3">
+  <button class="btn btn-outline-primary filter-btn active" data-filter="all">All</button>
+  <button class="btn btn-outline-primary filter-btn" data-filter="tech">Tech</button>
+  <button class="btn btn-outline-primary filter-btn" data-filter="design">Design</button>
+  <button class="btn btn-outline-primary filter-btn" data-filter="leadership">Leadership</button>
+</div>
+
+<!-- Workshops Grid -->
+<div class="container my-5">
+  <div class="row g-4" id="workshopContainer">
+    <!-- Workshop 1 -->
+    <div class="col-md-4 workshop-item" data-category="tech">
+      <div class="card workshop-card h-100">
+        <img src="https://picsum.photos/400/250?tech" class="card-img-top" alt="Workshop 1">
+        <div class="card-body">
+          <h5 class="card-title">Intro to Web Development</h5>
+          <p class="card-text">Covers HTML, CSS, and JavaScript basics for beginners.</p>
+          <button class="btn btn-primary" onclick="openDetails('Web Development', 'Alex Turner', '2025-06-15', '30', 'Great starter workshop for coding!', 'https://picsum.photos/500/300?code')">View Details</button>
+        </div>
+      </div>
+    </div>
+    <!-- Workshop 2 -->
+    <div class="col-md-4 workshop-item" data-category="design">
+      <div class="card workshop-card h-100">
+        <img src="https://picsum.photos/400/250?design" class="card-img-top" alt="Workshop 2">
+        <div class="card-body">
+          <h5 class="card-title">UX/UI Design Basics</h5>
+          <p class="card-text">User-centered design, wireframing, and UI trends.</p>
+          <button class="btn btn-primary" onclick="openDetails('UX/UI Design', 'Samantha Lee', '2025-06-20', '25', 'I learned Figma and prototyping in a week!', 'https://picsum.photos/500/300?ui')">View Details</button>
+        </div>
+      </div>
+    </div>
+    <!-- Workshop 3 -->
+    <div class="col-md-4 workshop-item" data-category="leadership">
+      <div class="card workshop-card h-100">
+        <img src="https://picsum.photos/400/250?leader" class="card-img-top" alt="Workshop 3">
+        <div class="card-body">
+          <h5 class="card-title">Leadership for Innovators</h5>
+          <p class="card-text">Boost your confidence, planning, and public speaking.</p>
+          <button class="btn btn-primary" onclick="openDetails('Leadership', 'Dr. Karen Smith', '2025-07-02', '20', 'Truly changed how I work with teams.', 'https://picsum.photos/500/300?leader')">View Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content rounded-4 overflow-hidden">
+      <div class="modal-header bg-gradient text-white" style="background: linear-gradient(to right, #0066cc, #3399ff);">
+        <h5 class="modal-title fw-semibold" id="detailsModalLabel">
+          <i class="bi bi-journal-richtext me-2"></i> Workshop Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-4" style="background-color: #f7f9fc;">
+        <h3 id="modalTitle" class="text-primary fw-bold mb-3"></h3>
+
+        <ul class="list-unstyled mb-4">
+          <li class="mb-2"><i class="bi bi-person-circle text-secondary me-2"></i><strong>Speaker:</strong> <span id="modalSpeaker"></span></li>
+          <li class="mb-2"><i class="bi bi-calendar-event text-secondary me-2"></i><strong>Date:</strong> <span id="modalDate"></span></li>
+          <li class="mb-2"><i class="bi bi-people-fill text-secondary me-2"></i><strong>Seats Available:</strong> <span id="modalSeats"></span></li>
+        </ul>
+
+        <div class="p-3 bg-white border-start border-4 border-primary shadow-sm mb-4">
+          <blockquote class="blockquote mb-0">
+            <p id="modalQuote" class="text-dark fst-italic"></p>
+          </blockquote>
+        </div>
+
+        <img id="modalImage" src="" alt="Workshop preview" class="img-fluid rounded-3 shadow">
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<!-- JavaScript -->
+<script>
+  // Filter functionality
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.getAttribute("data-filter");
+      document.querySelectorAll(".workshop-item").forEach(item => {
+        const category = item.getAttribute("data-category");
+        if (filter === "all" || category === filter) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    });
+  });
+
+  // Modal details
+  function openDetails(title, speaker, date, seats, quote, imageUrl) {
+    document.getElementById("modalTitle").textContent = title;
+    document.getElementById("modalSpeaker").textContent = speaker;
+    document.getElementById("modalDate").textContent = date;
+    document.getElementById("modalSeats").textContent = seats;
+    document.getElementById("modalQuote").textContent = quote;
+    document.getElementById("modalImage").src = imageUrl;
+    const modal = new bootstrap.Modal(document.getElementById("detailsModal"));
+    modal.show();
+  }
+</script>
+
+
+<!-- Footer -->
+<footer class="text-center mt-5">
+  <p>&copy; 2025 EmpowEra. All rights reserved.</p>
+  <small><a href="#">Privacy Policy</a> | <a href="#">Contact</a></small>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init();
+</script>
+
+</body>
+</html>

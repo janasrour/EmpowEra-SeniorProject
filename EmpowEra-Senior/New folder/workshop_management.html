@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empowera - Workshop Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+
+        .workshops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .workshop-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .workshop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .workshop-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .workshop-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .workshop-category {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .workshop-body {
+            padding: 1.5rem;
+        }
+
+        .workshop-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-icon {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 8px;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.3s ease;
+        }
+
+        .workshop-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.875rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-upcoming {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-ongoing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @media (max-width: 768px) {
+            .workshops-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-container {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Workshop Management</h1>
+            <p>Manage, track, and optimize your workshops efficiently</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalWorkshops">0</div>
+                <div class="stat-label">Total Workshops</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeWorkshops">0</div>
+                <div class="stat-label">Active Workshops</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalSeats">0</div>
+                <div class="stat-label">Total Seats</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalRevenue">$0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" onclick="openAddWorkshopModal()">
+                <span>+</span> Add New Workshop
+            </button>
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="Search workshops..." id="searchInput" onkeyup="filterWorkshops()">
+            </div>
+            <select class="form-select" id="statusFilter" onchange="filterWorkshops()" style="max-width: 200px;">
+                <option value="">All Status</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-secondary" onclick="exportWorkshops()" title="Export to CSV">
+                    📊 Export
+                </button>
+                <button class="btn btn-secondary" onclick="generateReport()" title="Generate Report">
+                    📈 Analytics
+                </button>
+                <button class="btn btn-secondary" onclick="sendReminders()" title="Send Reminders">
+                    ✉️ Reminders
+                </button>
+            </div>
+        </div>
+
+        <!-- Workshops Grid -->
+        <div class="workshops-grid" id="workshopsGrid">
+            <!-- Workshop cards will be populated by JavaScript -->
+        </div>
+
+        <!-- Add/Edit Workshop Modal -->
+        <div id="workshopModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">Add New Workshop</h2>
+                    <button class="close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="workshopForm">
+                        <div class="form-group">
+                            <label class="form-label">Workshop Title *</label>
+                            <input type="text" class="form-input" id="workshopTitle" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description *</label>
+                            <textarea class="form-textarea" id="workshopDescription" required></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Category *</label>
+                                <select class="form-select" id="workshopCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Leadership">Leadership</option>
+                                    <option value="Communication">Communication</option>
+                                    <option value="Technical Skills">Technical Skills</option>
+                                    <option value="Personal Development">Personal Development</option>
+                                    <option value="Team Building">Team Building</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Duration (hours) *</label>
+                                <input type="number" class="form-input" id="workshopDuration" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Start Date *</label>
+                                <input type="datetime-local" class="form-input" id="workshopStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">End Date *</label>
+                                <input type="datetime-local" class="form-input" id="workshopEndDate" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Assign Teacher *</label>
+                                <select class="form-select" id="workshopTeacher" required>
+                                    <option value="">Select Teacher</option>
+                                    <option value="dr-sarah-johnson">Dr. Sarah Johnson</option>
+                                    <option value="prof-michael-chen">Prof. Michael Chen</option>
+                                    <option value="ms-emma-davis">Ms. Emma Davis</option>
+                                    <option value="dr-james-wilson">Dr. James Wilson</option>
+                                    <option value="ms-lisa-brown">Ms. Lisa Brown</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location *</label>
+                                <input type="text" class="form-input" id="workshopLocation" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Total Seats *</label>
+                                <input type="number" class="form-input" id="workshopSeats" min="1" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Price ($) *</label>
+                                <input type="number" class="form-input" id="workshopPrice" min="0" step="0.01" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Status *</label>
+                            <select class="form-select" id="workshopStatus" required>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="ongoing">Ongoing</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Workshop</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Modal -->
+        <div id="progressModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Workshop Progress</h2>
+                    <button class="close" onclick="closeProgressModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="progressContent">
+                        <!-- Progress content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let workshops = [
+            {
+                id: 1,
+                title: "Leadership Excellence",
+                description: "Develop essential leadership skills for the modern workplace",
+                category: "Leadership",
+                startDate: "2025-06-15T09:00",
+                endDate: "2025-06-15T17:00",
+                duration: 8,
+                teacher: "dr-sarah-johnson",
+                teacherName: "Dr. Sarah Johnson",
+                location: "Conference Room A",
+                totalSeats: 30,
+                enrolledSeats: 25,
+                price: 299.99,
+                status: "upcoming",
+                progress: 0
+            },
+            {
+                id: 2,
+                title: "Effective Communication",
+                description: "Master the art of clear and impactful communication",
+                category: "Communication",
+                startDate: "2025-05-20T10:00",
+                endDate: "2025-05-22T16:00",
+                duration: 18,
+                teacher: "prof-michael-chen",
+                teacherName: "Prof. Michael Chen",
+                location: "Online",
+                totalSeats: 50,
+                enrolledSeats: 47,
+                price: 199.99,
+                status: "ongoing",
+                progress: 65
+            },
+            {
+                id: 3,
+                title: "Data Analytics Fundamentals",
+                description: "Learn the basics of data analysis and interpretation",
+                category: "Technical Skills",
+                startDate: "2025-04-10T09:00",
+                endDate: "2025-04-12T17:00",
+                duration: 24,
+                teacher: "ms-emma-davis",
+                teacherName: "Ms. Emma Davis",
+                location: "Lab 201",
+                totalSeats: 20,
+                enrolledSeats: 20,
+                price: 399.99,
+                status: "completed",
+                progress: 100
+            }
+        ];
+
+        let editingWorkshopId = null;
+
+        const teacherNames = {
+            'dr-sarah-johnson': 'Dr. Sarah Johnson',
+            'prof-michael-chen': 'Prof. Michael Chen',
+            'ms-emma-davis': 'Ms. Emma Davis',
+            'dr-james-wilson': 'Dr. James Wilson',
+            'ms-lisa-brown': 'Ms. Lisa Brown'
+        };
+
+        // Initialize the dashboard
+        function init() {
+            try {
+                updateStats();
+                renderWorkshops();
+                console.log('Dashboard initialized successfully');
+            } catch (error) {
+                console.error('Error initializing dashboard:', error);
+                showAlert('Error loading dashboard. Please refresh the page.', 'danger');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            try {
+                const totalWorkshops = workshops.length;
+                const activeWorkshops = workshops.filter(w => w.status === 'upcoming' || w.status === 'ongoing').length;
+                const totalSeats = workshops.reduce((sum, w) => sum + w.totalSeats, 0);
+                const totalRevenue = workshops.reduce((sum, w) => sum + (w.enrolledSeats * w.price), 0);
+
+                const totalWorkshopsEl = document.getElementById('totalWorkshops');
+                const activeWorkshopsEl = document.getElementById('activeWorkshops');
+                const totalSeatsEl = document.getElementById('totalSeats');
+                const totalRevenueEl = document.getElementById('totalRevenue');
+
+                if (totalWorkshopsEl) totalWorkshopsEl.textContent = totalWorkshops;
+                if (activeWorkshopsEl) activeWorkshopsEl.textContent = activeWorkshops;
+                if (totalSeatsEl) totalSeatsEl.textContent = totalSeats;
+                if (totalRevenueEl) totalRevenueEl.textContent = `$${totalRevenue.toLocaleString()}`;
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        // Render workshops
+        function renderWorkshops() {
+            try {
+                const grid = document.getElementById('workshopsGrid');
+                if (!grid) return;
+
+                const searchInput = document.getElementById('searchInput');
+                const statusFilter = document.getElementById('statusFilter');
+                
+                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const statusFilterValue = statusFilter ? statusFilter.value : '';
+
+                let filteredWorkshops = workshops.filter(workshop => {
+                    const matchesSearch = workshop.title.toLowerCase().includes(searchTerm) ||
+                                        workshop.category.toLowerCase().includes(searchTerm) ||
+                                        workshop.teacherName.toLowerCase().includes(searchTerm);
+                    const matchesStatus = !statusFilterValue || workshop.status === statusFilterValue;
+                    return matchesSearch && matchesStatus;
+                });
+
+                if (filteredWorkshops.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #6c757d;">No workshops found matching your criteria.</div>';
+                    return;
+                }
+
+                grid.innerHTML = filteredWorkshops.map(workshop => {
+                    const startDate = new Date(workshop.startDate);
+                    const endDate = new Date(workshop.endDate);
+                    
+                    return `
+                        <div class="workshop-card">
+                            <div class="workshop-header">
+                                <div class="workshop-title">${workshop.title || 'Untitled Workshop'}</div>
+                                <div class="workshop-category">${workshop.category || 'Uncategorized'}</div>
+                            </div>
+                            <div class="workshop-body">
+                                <div class="workshop-details">
+                                    <div class="detail-item">
+                                        <span class="detail-icon">👨‍🏫</span>
+                                        <span>${workshop.teacherName || 'No teacher assigned'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">📍</span>
+                                        <span>${workshop.location || 'TBD'}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">🕒</span>
+                                        <span>${workshop.duration || 0}h</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">💺</span>
+                                        <span>${workshop.enrolledSeats || 0}/${workshop.totalSeats || 0}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-icon">💰</span>
+                                        <span>$${workshop.price || 0}</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="status-badge status-${workshop.status || 'upcoming'}">${(workshop.status || 'upcoming').charAt(0).toUpperCase() + (workshop.status || 'upcoming').slice(1)}</span>
+                                    </div>
+                                </div>
+                                
+                                ${workshop.status === 'ongoing' ? `
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span>Progress</span>
+                                            <span>${workshop.progress || 0}%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: ${workshop.progress || 0}%"></div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="workshop-actions">
+                                    <button class="btn btn-primary btn-sm" onclick="editWorkshop(${workshop.id})">Edit</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="viewProgress(${workshop.id})">Progress</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteWorkshop(${workshop.id})">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error rendering workshops:', error);
+                const grid = document.getElementById('workshopsGrid');
+                if (grid) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #dc3545;">Error loading workshops. Please refresh the page.</div>';
+                }
+            }
+        }
+
+        // Filter workshops
+        function filterWorkshops() {
+            renderWorkshops();
+        }
+
+        // Open add workshop modal
+        function openAddWorkshopModal() {
+            try {
+                editingWorkshopId = null;
+                const modalTitle = document.getElementById('modalTitle');
+                const workshopForm = document.getElementById('workshopForm');
+                const modal = document.getElementById('workshopModal');
+                
+                if (modalTitle) modalTitle.textContent = 'Add New Workshop';
+                if (workshopForm) workshopForm.reset();
+                if (modal) modal.style.display = 'block';
+            } catch (error) {
+                console.error('Error opening add workshop modal:', error);
+                showAlert('Error opening modal. Please try again.', 'danger');
+            }
+        }
+
+        // Edit workshop
+        function editWorkshop(id) {
+            try {
+                const workshop = workshops.find(w => w.id === id);
+                if (!workshop) {
+                    showAlert('Workshop not found.', 'danger');
+                    return;
+                }
+
+                editingWorkshopId = id;
+                const modalTitle = document.getElementById('modalTitle');
+                if (modalTitle) modalTitle.textContent = 'Edit Workshop';
+                
+                // Populate form fields safely
+                const fields = {
+                    'workshopTitle': workshop.title,
+                    'workshopDescription': workshop.description,
+                    'workshopCategory': workshop.category,
+                    'workshopDuration': workshop.duration,
+                    'workshopStartDate': workshop.startDate,
+                    'workshopEndDate': workshop.endDate,
+                    'workshopTeacher': workshop.teacher,
+                    'workshopLocation': workshop.location,
+                    'workshopSeats': workshop.totalSeats,
+                    'workshopPrice': workshop.price,
+                    'workshopStatus': workshop.status
+                };
+
+                Object.keys(fields).forEach(fieldId => {
+                    const element = document.getElementById(fieldId);
+                    if (element) {
+                        element.value = fields[fieldId] || '';
+                    }
+                });
+                
+                const modal = document.getElementById('workshopModal');
+                if (modal) modal.style.display = 'block';
+            } catch (error) {
+                console.error('Error editing workshop:', error);
+                showAlert('Error loading workshop data.', 'danger');
+            }
+        }
+
+        // Delete workshop
+        function deleteWorkshop(id) {
+            try {
+                if (confirm('Are you sure you want to delete this workshop?')) {
+                    workshops = workshops.filter(w => w.id !== id);
+                    updateStats();
+                    renderWorkshops();
+                    showAlert('Workshop deleted successfully!', 'success');
+                }
+            } catch (error) {
+                console.error('Error deleting workshop:', error);
+                showAlert('Error deleting workshop.', 'danger');
+            }
+        }
+
+        // View progress
+        function viewProgress(id) {
+            try {
+                const workshop = workshops.find(w => w.id === id);
+                if (!workshop) {
+                    showAlert('Workshop not found.', 'danger');
+                    return;
+                }
+
+                const progressContent = document.getElementById('progressContent');
+                if (!progressContent) return;
+                
+                // Generate some sample progress data
+                const modules = [
+                    { name: 'Introduction', completed: workshop.progress > 20, progress: Math.min(100, workshop.progress * 5) },
+                    { name: 'Core Concepts', completed: workshop.progress > 40, progress: Math.max(0, Math.min(100, (workshop.progress - 20) * 2.5)) },
+                    { name: 'Practical Exercises', completed: workshop.progress > 60, progress: Math.max(0, Math.min(100, (workshop.progress - 40) * 2.5)) },
+                    { name: 'Assessment', completed: workshop.progress > 80, progress: Math.max(0, Math.min(100, (workshop.progress - 60) * 2.5)) },
+                    { name: 'Certification', completed: workshop.progress === 100, progress: Math.max(0, workshop.progress - 80) * 5 }
+                ];
+
+                progressContent.innerHTML = `
+                    <h3>${workshop.title}</h3>
+                    <p><strong>Teacher:</strong> ${workshop.teacherName}</p>
+                    <p><strong>Enrollment:</strong> ${workshop.enrolledSeats}/${workshop.totalSeats} participants</p>
+                    
+                    <div style="margin: 2rem 0;">
+                        <h4>Overall Progress: ${workshop.progress}%</h4>
+                        <div class="progress-bar" style="height: 20px; margin: 1rem 0;">
+                            <div class="progress-fill" style="width: ${workshop.progress}%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                ${workshop.progress}%
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Module Progress</h4>
+                    <div style="margin-top: 1rem;">
+                        ${modules.map(module => `
+                            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                                    <span style="font-weight: 500;">${module.name}</span>
+                                    <span style="color: ${module.completed ? '#28a745' : '#6c757d'};">
+                                        ${module.completed ? '✓ Completed' : 'In Progress'}
+                                    </span>
+                                </div>
+                                <div class="progress-bar" style="height: 8px;">
+                                    <div class="progress-fill" style="width: ${module.progress}%"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="margin-top: 2rem; padding: 1rem; background: #e7f3ff; border-radius: 8px;">
+                        <h4 style="color: #0066cc; margin-bottom: 1rem;">Insights</h4>
+                        <ul style="margin-left: 1.5rem; color: #333;">
+                            <li>Completion rate: ${Math.round((workshop.enrolledSeats / workshop.totalSeats) * 100)}%</li>
+                            <li>Average participant engagement: ${85 + Math.round(Math.random() * 10)}%</li>
+                            <li>Estimated completion date: ${workshop.status === 'ongoing' ? new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString() : 'N/A'}</li>
+                        </ul>
+                    </div>
+                `;
+
+                const modal = document.getElementById('progressModal');
+                if (modal) modal.style.display = 'block';
+            } catch (error) {
+                console.error('Error viewing progress:', error);
+                showAlert('Error loading progress data.', 'danger');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('workshopModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function closeProgressModal() {
+            const modal = document.getElementById('progressModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        // Handle form submission
+        function handleFormSubmission(e) {
+            e.preventDefault();
+            
+            try {
+                const formData = {
+                    title: document.getElementById('workshopTitle').value || '',
+                    description: document.getElementById('workshopDescription').value || '',
+                    category: document.getElementById('workshopCategory').value || '',
+                    duration: parseInt(document.getElementById('workshopDuration').value) || 0,
+                    startDate: document.getElementById('workshopStartDate').value || '',
+                    endDate: document.getElementById('workshopEndDate').value || '',
+                    teacher: document.getElementById('workshopTeacher').value || '',
+                    teacherName: teacherNames[document.getElementById('workshopTeacher').value] || '',
+                    location: document.getElementById('workshopLocation').value || '',
+                    totalSeats: parseInt(document.getElementById('workshopSeats').value) || 0,
+                    price: parseFloat(document.getElementById('workshopPrice').value) || 0,
+                    status: document.getElementById('workshopStatus').value || 'upcoming'
+                };
+
+                // Validation
+                if (!formData.title.trim()) {
+                    showAlert('Please enter a workshop title.', 'danger');
+                    return;
+                }
+
+                if (!formData.description.trim()) {
+                    showAlert('Please enter a workshop description.', 'danger');
+                    return;
+                }
+
+                if (!formData.category) {
+                    showAlert('Please select a category.', 'danger');
+                    return;
+                }
+
+                if (!formData.teacher) {
+                    showAlert('Please assign a teacher.', 'danger');
+                    return;
+                }
+
+                if (formData.totalSeats <= 0) {
+                    showAlert('Please enter a valid number of seats.', 'danger');
+                    return;
+                }
+
+                if (formData.price < 0) {
+                    showAlert('Please enter a valid price.', 'danger');
+                    return;
+                }
+
+                if (editingWorkshopId) {
+                    // Update existing workshop
+                    const index = workshops.findIndex(w => w.id === editingWorkshopId);
+                    if (index !== -1) {
+                        workshops[index] = {
+                            ...workshops[index],
+                            ...formData
+                        };
+                        showAlert('Workshop updated successfully!', 'success');
+                    }
+                } else {
+                    // Add new workshop
+                    const newWorkshop = {
+                        id: Math.max(...workshops.map(w => w.id), 0) + 1,
+                        ...formData,
+                        enrolledSeats: 0,
+                        progress: 0
+                    };
+                    workshops.push(newWorkshop);
+                    showAlert('Workshop created successfully!', 'success');
+                }
+
+                updateStats();
+                renderWorkshops();
+                closeModal();
+            } catch (error) {
+                console.error('Error handling form submission:', error);
+                showAlert('Error saving workshop. Please try again.', 'danger');
+            }
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            try {
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.textContent = message;
+                alert.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    opacity: 0;
+                    transform: translateX(100%);
+                    transition: all 0.3s ease;
+                    max-width: 300px;
+                `;
+
+                document.body.appendChild(alert);
+
+                // Trigger animation
+                setTimeout(() => {
+                    alert.style.opacity = '1';
+                    alert.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Remove after delay
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 300);
+                }, 3000);
+            } catch (error) {
+                console.error('Error showing alert:', error);
+            }
+        }
+
+        // Export workshops data
+        function exportWorkshops() {
+            try {
+                const csvContent = [
+                    ['ID', 'Title', 'Category', 'Teacher', 'Start Date', 'Duration', 'Seats', 'Price', 'Status'],
+                    ...workshops.map(w => [
+                        w.id,
+                        w.title || '',
+                        w.category || '',
+                        w.teacherName || '',
+                        w.startDate || '',
+                        w.duration || 0,
+                        `${w.enrolledSeats || 0}/${w.totalSeats || 0}`,
+                        `${w.price || 0}`,
+                        w.status || 'upcoming'
+                    ])
+                ].map(row => row.join(',')).join('\n');
+
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'workshops.csv';
+                a.click();
+                window.URL.revokeObjectURL(url);
+                showAlert('Workshops exported successfully!', 'success');
+            } catch (error) {
+                console.error('Error exporting workshops:', error);
+                showAlert('Error exporting workshops.', 'danger');
+            }
+        }
+
+        // Send reminders
+        function sendReminders() {
+            try {
+                const upcomingWorkshops = workshops.filter(w => {
+                    if (!w.startDate || w.status !== 'upcoming') return false;
+                    
+                    const startDate = new Date(w.startDate);
+                    const now = new Date();
+                    const timeDiff = startDate.getTime() - now.getTime();
+                    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                    return daysDiff <= 7 && daysDiff > 0;
+                });
+
+                if (upcomingWorkshops.length === 0) {
+                    showAlert('No upcoming workshops to send reminders for.', 'info');
+                    return;
+                }
+
+                // Simulate sending reminders
+                setTimeout(() => {
+                    showAlert(`Reminders sent for ${upcomingWorkshops.length} upcoming workshop(s)!`, 'success');
+                }, 1000);
+            } catch (error) {
+                console.error('Error sending reminders:', error);
+                showAlert('Error sending reminders.', 'danger');
+            }
+        }
+
+        // Generate report
+        function generateReport() {
+            try {
+                const reportData = {
+                    totalWorkshops: workshops.length,
+                    byCategory: {},
+                    byStatus: {},
+                    revenueByMonth: {},
+                    averageEnrollment: 0,
+                    topTeachers: {}
+                };
+
+                workshops.forEach(workshop => {
+                    // By category
+                    const category = workshop.category || 'Uncategorized';
+                    reportData.byCategory[category] = (reportData.byCategory[category] || 0) + 1;
+                    
+                    // By status
+                    const status = workshop.status || 'upcoming';
+                    reportData.byStatus[status] = (reportData.byStatus[status] || 0) + 1;
+                    
+                    // Revenue by month
+                    if (workshop.startDate) {
+                        const month = new Date(workshop.startDate).toLocaleString('default', { month: 'long', year: 'numeric' });
+                        const revenue = (workshop.enrolledSeats || 0) * (workshop.price || 0);
+                        reportData.revenueByMonth[month] = (reportData.revenueByMonth[month] || 0) + revenue;
+                    }
+                    
+                    // Top teachers
+                    const teacher = workshop.teacherName || 'Unassigned';
+                    reportData.topTeachers[teacher] = (reportData.topTeachers[teacher] || 0) + (workshop.enrolledSeats || 0);
+                });
+
+                // Calculate average enrollment
+                const totalEnrolled = workshops.reduce((sum, w) => sum + (w.enrolledSeats || 0), 0);
+                reportData.averageEnrollment = workshops.length > 0 ? (totalEnrolled / workshops.length).toFixed(1) : 0;
+
+                showReportModal(reportData);
+            } catch (error) {
+                console.error('Error generating report:', error);
+                showAlert('Error generating report.', 'danger');
+            }
+        }
+
+        function showReportModal(reportData) {
+            try {
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.style.display = 'block';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Workshop Analytics Report</h2>
+                            <button class="close" onclick="this.closest('.modal').remove()">&times;</button>
+                        </div>
+                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                            <div class="stats-container">
+                                <div class="stat-card">
+                                    <div class="stat-number">${reportData.totalWorkshops}</div>
+                                    <div class="stat-label">Total Workshops</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-number">${reportData.averageEnrollment}</div>
+                                    <div class="stat-label">Avg. Enrollment</div>
+                                </div>
+                            </div>
+                            
+                            <h3>Workshops by Category</h3>
+                            <div style="margin-bottom: 2rem;">
+                                ${Object.entries(reportData.byCategory).map(([category, count]) => `
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                                        <span>${category}</span>
+                                        <span style="font-weight: bold;">${count}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <h3>Revenue by Month</h3>
+                            <div style="margin-bottom: 2rem;">
+                                ${Object.entries(reportData.revenueByMonth).map(([month, revenue]) => `
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                                        <span>${month}</span>
+                                        <span style="font-weight: bold; color: #28a745;">${revenue.toLocaleString()}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <h3>Top Teachers by Enrollment</h3>
+                            <div>
+                                ${Object.entries(reportData.topTeachers)
+                                    .sort(([,a], [,b]) => b - a)
+                                    .slice(0, 5)
+                                    .map(([teacher, enrollments]) => `
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                                        <span>${teacher}</span>
+                                        <span style="font-weight: bold;">${enrollments} students</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            } catch (error) {
+                console.error('Error showing report modal:', error);
+                showAlert('Error displaying report.', 'danger');
+            }
+        }
+
+        // Auto-save functionality
+        function autoSave() {
+            try {
+                localStorage.setItem('empowera_workshops', JSON.stringify(workshops));
+            } catch (error) {
+                console.error('Error auto-saving:', error);
+            }
+        }
+
+        // Load saved data
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem('empowera_workshops');
+                if (saved) {
+                    const parsedData = JSON.parse(saved);
+                    if (Array.isArray(parsedData)) {
+                        workshops = parsedData;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading saved data:', error);
+            }
+        }
+
+        // Auto-update workshop status based on dates
+        function updateWorkshopStatuses() {
+            try {
+                const now = new Date();
+                let updated = false;
+                
+                workshops.forEach(workshop => {
+                    if (!workshop.startDate || !workshop.endDate) return;
+                    
+                    const startDate = new Date(workshop.startDate);
+                    const endDate = new Date(workshop.endDate);
+                    
+                    if (workshop.status === 'upcoming' && now >= startDate && now <= endDate) {
+                        workshop.status = 'ongoing';
+                        workshop.progress = Math.floor(Math.random() * 50) + 25; // Random progress between 25-75%
+                        updated = true;
+                    } else if (workshop.status === 'ongoing' && now > endDate) {
+                        workshop.status = 'completed';
+                        workshop.progress = 100;
+                        updated = true;
+                    }
+                });
+                
+                if (updated) {
+                    autoSave();
+                    updateStats();
+                    renderWorkshops();
+                }
+            } catch (error) {
+                console.error('Error updating workshop statuses:', error);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            try {
+                const modals = document.getElementsByClassName('modal');
+                for (let modal of modals) {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error handling modal click:', error);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            try {
+                // Ctrl+N to add new workshop
+                if (e.ctrlKey && e.key === 'n') {
+                    e.preventDefault();
+                    openAddWorkshopModal();
+                }
+                
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    const openModals = document.querySelectorAll('.modal[style*="block"]');
+                    openModals.forEach(modal => modal.style.display = 'none');
+                }
+            } catch (error) {
+                console.error('Error handling keyboard shortcuts:', error);
+            }
+        });
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                loadSavedData();
+                init();
+                
+                // Attach form event listener
+                const form = document.getElementById('workshopForm');
+                if (form) {
+                    form.addEventListener('submit', handleFormSubmission);
+                }
+                
+                // Update statuses every minute
+                setInterval(updateWorkshopStatuses, 60000);
+                
+                // Auto-save every 5 minutes
+                setInterval(autoSave, 300000);
+                
+                console.log('Workshop management system loaded successfully');
+            } catch (error) {
+                console.error('Error during initialization:', error);
+                showAlert('Error loading the application. Please refresh the page.', 'danger');
+            }
+        });
+    </script>
+</body>
+</html>
+                    

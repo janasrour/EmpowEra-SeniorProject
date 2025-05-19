@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Empowera Classroom Dashboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --accent: #60a5fa;
+            --bg: #f8fafc;
+            --card-bg: #fff;
+            --shadow: 0 2px 8px rgba(37,99,235,0.08);
+            --radius: 12px;
+            --header-height: 64px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: var(--bg);
+            color: #222;
+            min-height: 100vh;
+        }
+        header {
+            height: var(--header-height);
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 36px;
+            margin-right: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav a:hover, nav a:focus {
+            color: var(--accent);
+            outline: none;
+        }
+        main {
+            padding: 2rem 1rem 4rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        /* Dashboard Grid */
+        #dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .course-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.12s, box-shadow 0.12s;
+            display: flex;
+            flex-direction: column;
+            min-height: 320px;
+        }
+        .course-card:focus, .course-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 6px 24px rgba(37,99,235,0.15);
+            outline: 2px solid var(--accent);
+        }
+        .course-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #e0e7ef;
+        }
+        .course-info {
+            padding: 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .course-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .course-instructor {
+            color: #555;
+            font-size: 0.97rem;
+            margin-bottom: 0.5rem;
+        }
+        /* Course Details View */
+        #course-details {
+            display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem 1.5rem 1.5rem 1.5rem;
+            margin-top: 2rem;
+            position: relative;
+            min-height: 400px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: none;}
+        }
+        .back-btn {
+            position: absolute;
+            left: 1.5rem;
+            top: 1.5rem;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 1.2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+            transition: background 0.2s;
+        }
+        .back-btn:focus, .back-btn:hover {
+            background: var(--primary-dark);
+            outline: 2px solid var(--accent);
+        }
+        .course-header {
+            margin-left: 0;
+            margin-bottom: 1.2rem;
+            padding-left: 0;
+        }
+        .course-header h2 {
+            margin: 0 0 0.3rem 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .course-header .course-instructor {
+            color: #444;
+            font-size: 1rem;
+            margin-bottom: 0;
+        }
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            font-size: 1.07rem;
+            font-weight: 500;
+            color: var(--primary-dark);
+            padding: 0.7rem 0.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: border 0.2s, color 0.2s;
+        }
+        .tab-btn.active, .tab-btn:focus {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            outline: none;
+        }
+        .tab-content {
+            min-height: 180px;
+            margin-bottom: 2rem;
+        }
+        /* Announcements, Assignments, Materials, Grades */
+        .announcement, .assignment, .material, .grade {
+            background: #f1f5fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 4px rgba(37,99,235,0.05);
+        }
+        .announcement-title, .assignment-title, .material-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .grade-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .grade-row:last-child { border-bottom: none; }
+        /* Chat Box */
+        #chat-box {
+            position: fixed;
+            right: 2rem;
+            bottom: 2rem;
+            width: 340px;
+            max-width: 95vw;
+            background: var(--card-bg);
+            border-radius: 16px 16px 8px 8px;
+            box-shadow: 0 8px 32px rgba(37,99,235,0.18);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+            font-size: 1rem;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        #chat-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.7rem 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #chat-messages {
+            padding: 1rem;
+            height: 220px;
+            overflow-y: auto;
+            background: #f3f6fd;
+            font-size: 0.97rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+        .chat-msg {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+        }
+        .chat-msg.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 12px 12px 2px 12px;
+            padding: 0.5rem 0.9rem;
+            margin-left: auto;
+        }
+        .chat-msg.instructor {
+            align-self: flex-start;
+            background: #e0e7ef;
+            color: #222;
+            border-radius: 12px 12px 12px 2px;
+            padding: 0.5rem 0.9rem;
+            margin-right: auto;
+        }
+        .chat-meta {
+            font-size: 0.8em;
+            color: #555;
+            margin-top: 2px;
+            margin-bottom: 0;
+            text-align: right;
+        }
+        #chat-input-area {
+            display: flex;
+            border-top: 1px solid #e5e7eb;
+            background: #fff;
+        }
+        #chat-input {
+            flex: 1;
+            border: none;
+            padding: 0.7rem 1rem;
+            font-size: 1rem;
+            border-radius: 0 0 0 8px;
+            outline: none;
+        }
+        #chat-send {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0 1.2rem;
+            font-size: 1.1rem;
+            border-radius: 0 0 8px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #chat-send:focus, #chat-send:hover {
+            background: var(--primary-dark);
+            outline: none;
+        }
+        /* Notification Badge */
+        .notif-badge {
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.8em;
+            border-radius: 50%;
+            padding: 2px 7px;
+            margin-left: 6px;
+            vertical-align: middle;
+            font-weight: bold;
+            display: inline-block;
+        }
+        /* Responsive */
+        @media (max-width: 800px) {
+            main { padding: 1rem 0.5rem 4rem 0.5rem; }
+            #dashboard { gap: 1rem; }
+            #course-details { padding: 1.2rem 0.5rem 1rem 0.5rem; }
+            #chat-box { right: 0.5rem; bottom: 0.5rem; }
+        }
+        @media (max-width: 600px) {
+            header { flex-direction: column; height: auto; padding: 0.7rem 0.5rem;}
+            nav { margin-top: 0.5rem; }
+            #dashboard { grid-template-columns: 1fr; }
+            #chat-box { width: 98vw; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo" aria-label="Empowera Home">
+            <img src="https://i.imgur.com/6o5Vw1o.png" alt="Empowera Logo" />
+            Empowera
+        </div>
+        <nav aria-label="Main Navigation">
+            <a href="#">Home</a>
+            <a href="#">Courses</a>
+            <a href="#">Shop</a>
+            <a href="#">Workshops</a>
+            <a href="#">Events</a>
+            <a href="#">Login</a>
+            <a href="#">Signup</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Dashboard View -->
+        <section id="dashboard" aria-label="Registered Courses"></section>
+        <!-- Course Details View -->
+        <section id="course-details" aria-label="Course Details" tabindex="-1">
+            <button class="back-btn" id="back-to-dashboard" aria-label="Back to Dashboard">&larr; Back</button>
+            <div class="course-header">
+                <h2 id="details-title"></h2>
+                <div class="course-instructor" id="details-instructor"></div>
+            </div>
+            <div class="tabs" role="tablist">
+                <button class="tab-btn active" data-tab="announcements" role="tab" aria-selected="true" aria-controls="tab-announcements" id="tab-btn-announcements">Announcements <span class="notif-badge" id="announcements-badge" style="display:none;">0</span></button>
+                <button class="tab-btn" data-tab="assignments" role="tab" aria-selected="false" aria-controls="tab-assignments" id="tab-btn-assignments">Assignments</button>
+                <button class="tab-btn" data-tab="materials" role="tab" aria-selected="false" aria-controls="tab-materials" id="tab-btn-materials">Materials</button>
+                <button class="tab-btn" data-tab="grades" role="tab" aria-selected="false" aria-controls="tab-grades" id="tab-btn-grades">Grades</button>
+            </div>
+            <div class="tab-content" id="tab-announcements" role="tabpanel" aria-labelledby="tab-btn-announcements"></div>
+            <div class="tab-content" id="tab-assignments" role="tabpanel" aria-labelledby="tab-btn-assignments" style="display:none;"></div>
+            <div class="tab-content" id="tab-materials" role="tabpanel" aria-labelledby="tab-btn-materials" style="display:none;"></div>
+            <div class="tab-content" id="tab-grades" role="tabpanel" aria-labelledby="tab-btn-grades" style="display:none;"></div>
+        </section>
+    </main>
+    <!-- Chat Box -->
+    <div id="chat-box" aria-label="Course Chat" role="region">
+        <div id="chat-header">
+            <span>Course Chat</span>
+            <button id="chat-close" aria-label="Close Chat" style="background:none;border:none;color:#fff;font-size:1.2em;cursor:pointer;">&times;</button>
+        </div>
+        <div id="chat-messages" aria-live="polite"></div>
+        <form id="chat-input-area" autocomplete="off">
+            <input id="chat-input" type="text" aria-label="Type your message" placeholder="Type a message..." required />
+            <button id="chat-send" type="submit" aria-label="Send Message">&#9658;</button>
+        </form>
+    </div>
+    <script>
+        // Dummy Data
+        const courses = [
+            {
+                id: 1,
+                title: "Introduction to Python",
+                instructor: "Dr. Alice Smith",
+                image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=400&q=80",
+                announcements: [
+                    { title: "Welcome!", content: "Welcome to Python 101. Please check the syllabus.", date: "2024-06-01", unread: true },
+                    { title: "Assignment 1 Posted", content: "First assignment is available under Assignments tab.", date: "2024-06-03", unread: false }
+                ],
+                assignments: [
+                    { title: "Assignment 1: Variables", due: "2024-06-10", description: "Practice with Python variables and data types." }
+                ],
+                materials: [
+                    { title: "Syllabus", link: "#", description: "Course overview and policies." },
+                    { title: "Lecture 1 Slides", link: "#", description: "Introduction to Python." }
+                ],
+                grades: [
+                    { item: "Assignment 1", score: "95/100" }
+                ],
+                chat: [
+                    { user: "instructor", name: "Dr. Alice", text: "Welcome to the course!", time: "09:00" },
+                    { user: "student", name: "You", text: "Thank you!", time: "09:01" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Web Development Basics",
+                instructor: "Mr. John Doe",
+                image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=400&q=80",
+                announcements: [
+                    { title: "Class Starts Monday", content: "First class will be on Monday at 10am.", date: "2024-06-02", unread: true }
+                ],
+                assignments: [
+                    { title: "Assignment 1: HTML Page", due: "2024-06-12", description: "Create a personal homepage using HTML and CSS." }
+                ],
+                materials: [
+                    { title: "Course Outline", link: "#", description: "Topics and schedule." }
+                ],
+                grades: [],
+                chat: [
+                    { user: "instructor", name: "Mr. John", text: "Looking forward to our first class!", time: "08:30" }
+                ]
+            }
+        ];
+
+        // State
+        let currentCourse = null;
+        let currentTab = "announcements";
+        let unreadAnnouncements = {};
+
+        // Dashboard Rendering
+        function renderDashboard() {
+            const dashboard = document.getElementById('dashboard');
+            dashboard.innerHTML = '';
+            courses.forEach(course => {
+                // Count unread announcements
+                const unread = course.announcements.filter(a => a.unread).length;
+                unreadAnnouncements[course.id] = unread;
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Open course: ${course.title}`);
+                card.innerHTML = `
+                    <img class="course-img" src="${course.image}" alt="Course image for ${course.title}" />
+                    <div class="course-info">
+                        <div>
+                            <div class="course-title">${course.title}</div>
+                            <div class="course-instructor">${course.instructor}</div>
+                        </div>
+                        ${unread > 0 ? `<div><span class="notif-badge" aria-label="${unread} unread announcements">${unread}</span> Unread</div>` : ''}
+                    </div>
+                `;
+                card.addEventListener('click', () => openCourseDetails(course.id));
+                card.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openCourseDetails(course.id);
+                    }
+                });
+                dashboard.appendChild(card);
+            });
+            document.getElementById('dashboard').style.display = '';
+            document.getElementById('course-details').style.display = 'none';
+            document.getElementById('chat-box').style.display = 'none';
+        }
+
+        // Course Details Rendering
+        function openCourseDetails(courseId) {
+            currentCourse = courses.find(c => c.id === courseId);
+            if (!currentCourse) return;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('course-details').style.display = '';
+            document.getElementById('details-title').textContent = currentCourse.title;
+            document.getElementById('details-instructor').textContent = currentCourse.instructor;
+            // Tabs
+            setTab('announcements');
+            // Show chat
+            renderChat();
+            document.getElementById('chat-box').style.display = 'flex';
+            // Mark announcements as read
+            currentCourse.announcements.forEach(a => a.unread = false);
+            updateAnnouncementBadge();
+            // Focus for accessibility
+            document.getElementById('course-details').focus();
+        }
+
+        // Tabs
+        function setTab(tab) {
+            currentTab = tab;
+            ['announcements','assignments','materials','grades'].forEach(t => {
+                document.getElementById('tab-' + t).style.display = (t === tab) ? '' : 'none';
+                document.getElementById('tab-btn-' + t).classList.toggle('active', t === tab);
+                document.getElementById('tab-btn-' + t).setAttribute('aria-selected', t === tab ? 'true' : 'false');
+            });
+            if (tab === 'announcements') renderAnnouncements();
+            if (tab === 'assignments') renderAssignments();
+            if (tab === 'materials') renderMaterials();
+            if (tab === 'grades') renderGrades();
+        }
+
+        // Announcements
+        function renderAnnouncements() {
+            const container = document.getElementById('tab-announcements');
+            if (!currentCourse) return;
+            if (currentCourse.announcements.length === 0) {
+                container.innerHTML = `<div>No announcements yet.</div>`;
+                return;
+            }
+            container.innerHTML = currentCourse.announcements.map(a => `
+                <div class="announcement">
+                    <div class="announcement-title">${a.title}</div>
+                    <div>${a.content}</div>
+                    <div class="chat-meta">${a.date}</div>
+                </div>
+            `).join('');
+        }
+        // Assignments
+        function renderAssignments() {
+            const container = document.getElementById('tab-assignments');
+            if (!currentCourse) return;
+            if (currentCourse.assignments.length === 0) {
+                container.innerHTML = `<div>No assignments yet.</div>`;
+                return;
+            }
+            container.innerHTML = currentCourse.assignments.map(a => `
+                <div class="assignment">
+                    <div class="assignment-title">${a.title}</div>
+                    <div>Due: <b>${a.due}</b></div>
+                    <div>${a.description}</div>
+                </div>
+            `).join('');
+        }
+        // Materials
+        function renderMaterials() {
+            const container = document.getElementById('tab-materials');
+            if (!currentCourse) return;
+            if (currentCourse.materials.length === 0) {
+                container.innerHTML = `<div>No materials yet.</div>`;
+                return;
+            }
+            container.innerHTML = currentCourse.materials.map(m => `
+                <div class="material">
+                    <div class="material-title"><a href="${m.link}" target="_blank" rel="noopener">${m.title}</a></div>
+                    <div>${m.description}</div>
+                </div>
+            `).join('');
+        }
+        // Grades
+        function renderGrades() {
+            const container = document.getElementById('tab-grades');
+            if (!currentCourse) return;
+            if (currentCourse.grades.length === 0) {
+                container.innerHTML = `<div>No grades yet.</div>`;
+                return;
+            }
+            container.innerHTML = currentCourse.grades.map(g => `
+                <div class="grade-row">
+                    <span>${g.item}</span>
+                    <span>${g.score}</span>
+                </div>
+            `).join('');
+        }
+
+        // Announcement Badge
+        function updateAnnouncementBadge() {
+            if (!currentCourse) return;
+            const badge = document.getElementById('announcements-badge');
+            const unread = currentCourse.announcements.filter(a => a.unread).length;
+            if (unread > 0) {
+                badge.textContent = unread;
+                badge.style.display = '';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Back to Dashboard
+        document.getElementById('back-to-dashboard').addEventListener('click', () => {
+            renderDashboard();
+        });
+
+        // Tab Buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => setTab(btn.dataset.tab));
+            btn.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setTab(btn.dataset.tab);
+                }
+            });
+        });
+
+        // Chat Box
+        function renderChat() {
+            const chatBox = document.getElementById('chat-box');
+            const messages = document.getElementById('chat-messages');
+            if (!currentCourse) return;
+            messages.innerHTML = '';
+            currentCourse.chat.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'chat-msg ' + (msg.user === 'student' ? 'user' : 'instructor');
+                div.innerHTML = `
+                    <span>${msg.text}</span>
+                    <span class="chat-meta">${msg.name} &middot; ${msg.time}</span>
+                `;
+                messages.appendChild(div);
+            });
+            messages.scrollTop = messages.scrollHeight;
+        }
+        // Send Chat Message
+        document.getElementById('chat-input-area').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text || !currentCourse) return;
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+            currentCourse.chat.push({ user: 'student', name: 'You', text, time });
+            renderChat();
+            input.value = '';
+            setTimeout(() => {
+                // Simulate instructor reply
+                if (Math.random() > 0.5) {
+                    currentCourse.chat.push({ user: 'instructor', name: currentCourse.instructor.split(' ')[1], text: "Thanks for your message!", time });
+                    renderChat();
+                }
+            }, 1200);
+        });
+        // Chat open/close
+        document.getElementById('chat-close').addEventListener('click', () => {
+            document.getElementById('chat-box').style.display = 'none';
+        });
+
+        // Accessibility: ESC closes chat
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('chat-box').style.display = 'none';
+            }
+        });
+
+        // Initial Render
+        renderDashboard();
+    </script>
+</body>
+</html>

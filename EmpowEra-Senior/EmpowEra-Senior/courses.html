@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Empowera Courses</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --emp-blue: #2563eb;
+            --emp-blue-dark: #1e40af;
+            --emp-blue-light: #60a5fa;
+            --emp-bg: #f8fafc;
+            --emp-card: #fff;
+            --emp-accent: #38bdf8;
+            --emp-text: #1e293b;
+            --emp-muted: #64748b;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: var(--emp-bg);
+            color: var(--emp-text);
+        }
+        header {
+            background: var(--emp-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 0.5rem;
+        }
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        nav a.active, nav a:hover {
+            color: var(--emp-accent);
+        }
+        /* Hero Section */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: var(--emp-blue-dark);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-slider {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+        .hero-slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-text {
+            position: relative;
+            z-index: 3;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+            max-width: 90vw;
+            padding: 1rem 2rem;
+            background: rgba(30,64,175,0.4);
+            border-radius: 1rem;
+        }
+        /* Filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: #fff;
+            padding: 1.5rem 2rem 1rem 2rem;
+            margin: 0 auto;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(30,64,175,0.04);
+        }
+        .filters label {
+            font-weight: 500;
+            margin-right: 0.5rem;
+            color: var(--emp-muted);
+        }
+        .filters input[type="search"],
+        .filters select {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #dbeafe;
+            border-radius: 0.4rem;
+            font-size: 1rem;
+            background: #f1f5f9;
+            color: var(--emp-text);
+            margin-right: 1rem;
+        }
+        .filters select {
+            min-width: 120px;
+        }
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .course-card {
+            background: var(--emp-card);
+            border-radius: 1rem;
+            box-shadow: 0 2px 12px rgba(30,64,175,0.06);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.15s;
+        }
+        .course-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 4px 20px rgba(30,64,175,0.10);
+        }
+        .course-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #e0e7ef;
+        }
+        .course-content {
+            padding: 1rem 1.2rem 1.2rem 1.2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .course-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--emp-blue-dark);
+        }
+        .course-meta {
+            font-size: 0.95rem;
+            color: var(--emp-muted);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .course-price {
+            font-weight: 700;
+            color: var(--emp-accent);
+        }
+        .course-capacity {
+            font-size: 0.95rem;
+            color: var(--emp-muted);
+        }
+        .course-desc {
+            font-size: 0.98rem;
+            color: var(--emp-text);
+            margin: 0.5rem 0 0.7rem 0;
+            flex: 1;
+        }
+        .course-btn {
+            background: var(--emp-blue);
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+            align-self: flex-start;
+        }
+        .course-btn:hover {
+            background: var(--emp-blue-dark);
+        }
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(30,64,175,0.15);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 1rem;
+            max-width: 600px;
+            width: 95vw;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(30,64,175,0.18);
+            animation: modalIn 0.3s;
+        }
+        @keyframes modalIn {
+            from { transform: translateY(40px) scale(0.98); opacity: 0; }
+            to { transform: none; opacity: 1; }
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--emp-muted);
+            cursor: pointer;
+        }
+        .modal-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.7rem;
+            margin-bottom: 1rem;
+            background: #e0e7ef;
+        }
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--emp-blue-dark);
+            margin-bottom: 0.3rem;
+        }
+        .modal-category {
+            font-size: 1rem;
+            color: var(--emp-accent);
+            margin-bottom: 0.7rem;
+        }
+        .modal-desc {
+            font-size: 1.05rem;
+            color: var(--emp-text);
+            margin-bottom: 1rem;
+        }
+        .modal-instructor {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .modal-instructor img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e0e7ef;
+        }
+        .modal-instructor-info {
+            font-size: 0.98rem;
+        }
+        .modal-timeline {
+            font-size: 0.98rem;
+            color: var(--emp-muted);
+            margin-bottom: 1rem;
+        }
+        .modal-price {
+            font-weight: 700;
+            color: var(--emp-accent);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-capacity {
+            font-size: 0.98rem;
+            color: var(--emp-muted);
+            margin-bottom: 1rem;
+        }
+        .modal-enroll {
+            background: var(--emp-blue);
+            color: #fff;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.7rem 1.5rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-enroll:hover {
+            background: var(--emp-blue-dark);
+        }
+        /* Footer */
+        footer {
+            background: var(--emp-blue-dark);
+            color: #fff;
+            text-align: center;
+            padding: 1.2rem 2rem;
+            margin-top: 2rem;
+            font-size: 1rem;
+        }
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        .footer-links a {
+            color: var(--emp-accent);
+            text-decoration: none;
+            margin: 0 0.8rem;
+            font-weight: 500;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        /* Responsive */
+        @media (max-width: 700px) {
+            header, .filters, footer {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .hero-text {
+                font-size: 1.2rem;
+                padding: 0.7rem 1rem;
+            }
+            .modal-content {
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 500px) {
+            .courses-grid {
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.7rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm" style="width:100vw; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; position:relative; min-height:90px;">
+        <div class="container-fluid px-5">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <img src="images/logo.jpeg" alt="EmpowEra Logo" style="height:48px; width:auto; vertical-align:middle; margin-right:10px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0" style="font-family: 'Times New Roman', Times, serif;">
+                    <li class="nav-item"><a class= "nav-link custom-nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active custom-nav-link courses-link" href="courses.html">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="shop.html">Shop</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="events.html">Events</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="workshops.html">Workshops</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="donate.html">Donate</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link custom-nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item">
+                        <a class="btn btn-info text-white fw-bold px-4 py-2 ms-2" href="signup.html" style="font-size: 1.1rem;">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    
+    <style>
+        body {
+            color: #c9bdbd !important;
+        }
+        .custom-nav-link {
+            color: #c9bdbd !important;
+            position: relative;
+            transition: color 0.2s; 
+            font-size: 1.25rem !important;
+            margin-right: 1.5rem;
+            text-decoration: none;
+        }
+        .custom-nav-link:last-child {
+            margin-right: 0;
+        }
+        .custom-nav-link.active,
+        .custom-nav-link:focus,
+        .custom-nav-link:hover {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        /* Remove underline for Home link when navbar is sticky/fixed */
+        .navbar.sticky-top .courses-link.active {
+            text-decoration: none !important;
+        }
+        .navbar .btn-info {
+            background-color: #0d6efd;
+            border: none;
+        }
+        .navbar .btn-info:hover, .navbar .btn-info:focus {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
+        .navbar-light .navbar-nav .nav-link.active {
+            color: #0d6efd !important;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        </style>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+  <div class="hero-slider" id="hero-slider">
+    <div class="hero-slide active">
+      <img src="images/courses/course1.jpg" alt="Slide 1" />
+    </div>
+    <div class="hero-slide">
+      <img src="images/courses/course2.webp" alt="Slide 2" />
+    </div>
+    <div class="hero-slide">
+      <img src="images/courses/course3.jpg" alt="Slide 3" />
+    </div>
+  </div>
+  <div class="hero-text" id="hero-text">
+    Empower your journey. Learn, grow, and connect.
+  </div>
+
+
+<style>
+  .hero {
+    position: relative;
+    height: 60vh;
+    overflow: hidden;
+  }
+
+  .hero-slider {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;
+  }
+
+  .hero-slide.active {
+    opacity: 1;
+    z-index: 1;
+  }
+
+  .hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: zoomFade 12s ease-in-out infinite;
+  }
+
+  .hero-text {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+    animation: slideUp 1.2s ease-in-out;
+  }
+
+  @keyframes zoomFade {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translate(-50%, 100px);
+      opacity: 0;
+    }
+    to {
+      transform: translate(-50%, 0);
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 6000); // 6 seconds per slide
+</script>
+    </section>
+
+    <!-- Filters and Courses -->    
+    <form class="filters" id="filters" autocomplete="off">
+        <label for="search">Search:</label>
+        <input type="search" id="search" placeholder="Course or Instructor" aria-label="Search courses" />
+
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="">All</option>
+            <option>Technology</option>
+            <option>Business</option>
+            <option>Art</option>
+            <option>Handmades</option>
+            <option>Education</option>
+        </select>
+
+        <label for="price">Price:</label>
+        <select id="price">
+            <option value="">All</option>
+            <option value="0-20">$0–20</option>
+            <option value="20-50">$20–50</option>
+            <option value="50+">$50+</option>
+        </select>
+
+        <label for="sort">Sort:</label>
+        <select id="sort">
+            <option value="newest">Newest</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+        </select>
+    </form>
+
+    <main>
+        <section class="courses-grid" id="courses-grid" aria-live="polite">
+            <!-- Course cards will be injected here by JS -->
+        </section>
+    </main>
+
+    <!-- Modal for course details -->
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+            <img class="modal-img" id="modal-img" src="" alt="" />
+            <div class="modal-title" id="modal-title"></div>
+            <div class="modal-category" id="modal-category"></div>
+            <div class="modal-desc" id="modal-desc"></div>
+            <div class="modal-instructor" id="modal-instructor">
+                <img id="modal-instructor-img" src="" alt="" />
+                <div class="modal-instructor-info">
+                    <div id="modal-instructor-name" style="font-weight:600"></div>
+                    <div id="modal-instructor-bio" style="font-size:0.95em"></div>
+                </div>
+            </div>
+            <div class="modal-timeline" id="modal-timeline"></div>
+            <div class="modal-price" id="modal-price"></div>
+            <div class="modal-capacity" id="modal-capacity"></div>
+            <button class="modal-enroll" id="modal-enroll">Enroll</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Terms</a>|
+            <a href="#">Privacy</a>|
+            <a href="#">Contact</a>
+        </div>
+        &copy; 2024 Empowera. All rights reserved.
+    </footer>
+
+    <script>
+        // HERO SLIDER
+        const heroTexts = [
+            "Empower your journey. Learn, grow, and connect.",
+            "Unlock your potential with world-class courses.",
+            "Join a community of lifelong learners.",
+            "Transform your future, one skill at a time."
+        ];
+        const heroTextEl = document.getElementById('hero-text');
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        let heroIdx = 0, textIdx = 0;
+        setInterval(() => {
+            heroSlides[heroIdx].classList.remove('active');
+            heroIdx = (heroIdx + 1) % heroSlides.length;
+            heroSlides[heroIdx].classList.add('active');
+            textIdx = (textIdx + 1) % heroTexts.length;
+            heroTextEl.textContent = heroTexts[textIdx];
+        }, 3500);
+
+        // SAMPLE DATA
+        const courses = [
+            {
+                id: 1,
+                image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
+                title: 'Full Stack Web Development',
+                category: 'Technology',
+                price: 49,
+                capacity: 30,
+                seatsLeft: 12,
+                description: 'Build modern web apps from scratch using JavaScript, Node, and React.',
+                outcomes: 'Master front-end and back-end development.',
+                instructor: {
+                    name: 'Alex Kim',
+                    photo: 'https://randomuser.me/api/portraits/men/32.jpg',
+                    bio: 'Senior Developer & Mentor'
+                },
+                start: '2024-07-01',
+                end: '2024-09-15',
+                schedule: 'Mon & Wed, 5–7PM',
+                created: '2024-05-10'
+            },
+            {
+                id: 2,
+                image: 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=400&q=80',
+                title: 'Creative Digital Art',
+                category: 'Art',
+                price: 20,
+                capacity: 20,
+                seatsLeft: 5,
+                description: 'Explore digital painting, illustration, and creative design.',
+                outcomes: 'Create stunning digital artworks.',
+                instructor: {
+                    name: 'Maria Lopez',
+                    photo: 'https://randomuser.me/api/portraits/women/44.jpg',
+                    bio: 'Digital Artist & Educator'
+                },
+                start: '2024-08-05',
+                end: '2024-09-30',
+                schedule: 'Sat, 10AM–1PM',
+                created: '2024-05-15'
+            },
+            {
+                id: 3,
+                image: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=400&q=80',
+                title: 'Mindful Wellness',
+                category: 'Wellness',
+                price: 0,
+                capacity: 40,
+                seatsLeft: 28,
+                description: 'Learn mindfulness, meditation, and stress management techniques.',
+                outcomes: 'Improve your mental and physical well-being.',
+                instructor: {
+                    name: 'Priya Singh',
+                    photo: 'https://randomuser.me/api/portraits/women/68.jpg',
+                    bio: 'Certified Wellness Coach'
+                },
+                start: '2024-07-10',
+                end: '2024-08-20',
+                schedule: 'Tue & Thu, 6–7PM',
+                created: '2024-05-12'
+            },
+            {
+                id: 4,
+                image: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
+                title: 'Entrepreneurship 101',
+                category: 'Business',
+                price: 55,
+                capacity: 25,
+                seatsLeft: 2,
+                description: 'Start and grow your own business with practical strategies.',
+                outcomes: 'Launch your entrepreneurial journey.',
+                instructor: {
+                    name: 'James Carter',
+                    photo: 'https://randomuser.me/api/portraits/men/45.jpg',
+                    bio: 'Startup Advisor'
+                },
+                start: '2024-07-20',
+                end: '2024-09-10',
+                schedule: 'Fri, 4–6PM',
+                created: '2024-05-18'
+            },
+            {
+                id: 5,
+                image: 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=400&q=80',
+                title: 'Modern Teaching Strategies',
+                category: 'Education',
+                price: 35,
+                capacity: 35,
+                seatsLeft: 18,
+                description: 'Innovative methods for effective classroom engagement.',
+                outcomes: 'Enhance your teaching skills.',
+                instructor: {
+                    name: 'Linda Zhao',
+                    photo: 'https://randomuser.me/api/portraits/women/50.jpg',
+                    bio: 'Education Specialist'
+                },
+                start: '2024-08-01',
+                end: '2024-09-20',
+                schedule: 'Wed, 3–5PM',
+                created: '2024-05-20'
+            }
+        ];
+
+        // FILTERS & SORT
+        function filterAndSortCourses() {
+            const search = document.getElementById('search').value.trim().toLowerCase();
+            const category = document.getElementById('category').value;
+            const price = document.getElementById('price').value;
+            const sort = document.getElementById('sort').value;
+
+            let filtered = courses.filter(c => {
+                let match = true;
+                if (search) {
+                    match = (c.title.toLowerCase().includes(search) || c.instructor.name.toLowerCase().includes(search));
+                }
+                if (match && category) {
+                    match = c.category === category;
+                }
+                if (match && price) {
+                    if (price === '0-20') match = c.price >= 0 && c.price <= 20;
+                    else if (price === '20-50') match = c.price > 20 && c.price <= 50;
+                    else if (price === '50+') match = c.price > 50;
+                }
+                return match;
+            });
+
+            if (sort === 'newest') {
+                filtered.sort((a, b) => new Date(b.created) - new Date(a.created));
+            } else if (sort === 'price-low') {
+                filtered.sort((a, b) => a.price - b.price);
+            } else if (sort === 'price-high') {
+                filtered.sort((a, b) => b.price - a.price);
+            }
+            return filtered;
+        }
+
+        // RENDER COURSES
+        function renderCourses() {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = '';
+            const filtered = filterAndSortCourses();
+            if (!filtered.length) {
+                grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--emp-muted);font-size:1.2rem;">No courses found.</div>';
+                return;
+            }
+            filtered.forEach(course => {
+                const card = document.createElement('article');
+                card.className = 'course-card';
+                card.tabIndex = 0;
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `View details for ${course.title}`);
+                card.innerHTML = `
+                    <img class="course-img" src="${course.image}" alt="${course.title} cover" />
+                    <div class="course-content">
+                        <div class="course-title">${course.title}</div>
+                        <div class="course-meta">
+                            <span>${course.category}</span>
+                            <span class="course-price">${course.price === 0 ? 'Free' : '$'+course.price}</span>
+                        </div>
+                        <div class="course-capacity">Seats Left: ${course.seatsLeft} / ${course.capacity}</div>
+                        <div class="course-desc">${course.description}</div>
+                        <button class="course-btn" data-id="${course.id}">View Details</button>
+                    </div>
+                `;
+                card.querySelector('.course-btn').addEventListener('click', e => {
+                    e.stopPropagation();
+                    openModal(course.id);
+                });
+                card.addEventListener('click', () => openModal(course.id));
+                grid.appendChild(card);
+            });
+        }
+
+        // MODAL
+        function openModal(id) {
+            const course = courses.find(c => c.id === id);
+            if (!course) return;
+            document.getElementById('modal-img').src = course.image;
+            document.getElementById('modal-img').alt = course.title + ' cover';
+            document.getElementById('modal-title').textContent = course.title;
+            document.getElementById('modal-category').textContent = course.category;
+            document.getElementById('modal-desc').textContent = course.description + (course.outcomes ? ' Outcomes: ' + course.outcomes : '');
+            document.getElementById('modal-instructor-img').src = course.instructor.photo;
+            document.getElementById('modal-instructor-img').alt = course.instructor.name;
+            document.getElementById('modal-instructor-name').textContent = course.instructor.name;
+            document.getElementById('modal-instructor-bio').textContent = course.instructor.bio;
+            document.getElementById('modal-timeline').textContent =
+                `Start: ${course.start} | End: ${course.end} | Schedule: ${course.schedule}`;
+            document.getElementById('modal-price').textContent = course.price === 0 ? 'Free' : '$' + course.price;
+            document.getElementById('modal-capacity').textContent = `Seats Left: ${course.seatsLeft} / ${course.capacity}`;
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('modal-enroll').onclick = () => alert('Enrollment coming soon!');
+        }
+        document.getElementById('modal-close').onclick = () => {
+            document.getElementById('modal').classList.remove('active');
+        };
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') document.getElementById('modal').classList.remove('active');
+        });
+        document.getElementById('modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('active');
+        });
+
+        // FILTERS EVENTS
+        document.getElementById('filters').addEventListener('input', renderCourses);
+
+        // INITIAL RENDER
+        renderCourses();
+    </script>
+</body>
+</html>
